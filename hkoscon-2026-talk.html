@@ -1,0 +1,1744 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Teaching Taste to an Agent — Augustin Chan — HKOSCon 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Source+Sans+3:wght@300;400;500;600&family=Noto+Serif+TC:wght@400;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ===========================================
+   CSS CUSTOM PROPERTIES — SCHOLAR'S PAPER THEME
+   =========================================== */
+:root {
+  --paper: #FAF9F5;
+  --tone: #F5F2EC;
+  --foreground: rgba(0, 0, 0, 0.85);
+  --muted: #87867F;
+  --clay: #C24E38;
+  --clay-light: rgba(194, 78, 56, 0.08);
+  --clay-medium: rgba(194, 78, 56, 0.15);
+  --border: #E8E6DC;
+  --ink-wash: rgba(0, 0, 0, 0.04);
+  --gold: #c9a96e;
+
+  --font-display: 'Cormorant Garamond', serif;
+  --font-body: 'Source Sans 3', sans-serif;
+  --font-cjk: 'Noto Serif TC', serif;
+  --font-mono: 'JetBrains Mono', monospace;
+
+  --title-size: clamp(2.2rem, 6vw, 5rem);
+  --h2-size: clamp(1.8rem, 4.5vw, 3.5rem);
+  --h3-size: clamp(1.3rem, 3vw, 2.5rem);
+  --body-size: clamp(1rem, 2.2vw, 1.75rem);
+  --small-size: clamp(0.85rem, 1.6vw, 1.35rem);
+  --code-size: clamp(0.85rem, 1.5vw, 1.2rem);
+
+  --slide-padding: clamp(1.5rem, 4vw, 4rem);
+  --content-gap: clamp(0.75rem, 2vw, 2rem);
+  --element-gap: clamp(0.3rem, 1vw, 1rem);
+
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --duration-normal: 0.6s;
+}
+
+/* ===========================================
+   RESET & BASE
+   =========================================== */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+/* ===========================================
+   VIEWPORT FITTING: MANDATORY BASE STYLES
+   =========================================== */
+html, body { height: 100%; overflow-x: hidden; }
+html { scroll-snap-type: y mandatory; scroll-behavior: smooth; }
+
+.slide {
+  width: 100vw; height: 100vh; height: 100dvh;
+  overflow: hidden;
+  scroll-snap-align: start;
+  display: flex; flex-direction: column;
+  position: relative;
+  background: var(--paper);
+}
+
+.slide-content {
+  flex: 1; display: flex; flex-direction: column;
+  justify-content: center;
+  max-height: 100%; overflow: hidden;
+  padding: var(--slide-padding);
+}
+
+img, .image-container {
+  max-width: 100%;
+  max-height: min(50vh, 400px);
+  object-fit: contain;
+}
+
+.card, .container, .content-box {
+  max-width: min(90vw, 1000px);
+  max-height: min(80vh, 700px);
+}
+
+.feature-list, .bullet-list { gap: clamp(0.4rem, 1vh, 1rem); }
+.feature-list li, .bullet-list li { font-size: var(--body-size); line-height: 1.4; }
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr));
+  gap: clamp(0.5rem, 1.5vw, 1rem);
+}
+
+@media (max-height: 700px) {
+  :root {
+    --slide-padding: clamp(0.75rem, 3vw, 2rem);
+    --content-gap: clamp(0.4rem, 1.5vw, 1rem);
+    --title-size: clamp(1.5rem, 4.5vw, 2.8rem);
+    --h2-size: clamp(1.1rem, 3vw, 2rem);
+  }
+}
+@media (max-height: 600px) {
+  :root {
+    --slide-padding: clamp(0.5rem, 2.5vw, 1.5rem);
+    --content-gap: clamp(0.3rem, 1vw, 0.75rem);
+    --title-size: clamp(1.2rem, 4vw, 2.2rem);
+    --body-size: clamp(0.7rem, 1.2vw, 0.95rem);
+  }
+  .nav-dots, .keyboard-hint, .decorative { display: none; }
+}
+@media (max-height: 500px) {
+  :root {
+    --slide-padding: clamp(0.4rem, 2vw, 1rem);
+    --title-size: clamp(1rem, 3.5vw, 1.8rem);
+    --h2-size: clamp(0.9rem, 2.5vw, 1.4rem);
+    --body-size: clamp(0.65rem, 1vw, 0.85rem);
+  }
+}
+@media (max-width: 600px) {
+  :root {
+    --title-size: clamp(1.5rem, 8vw, 2.8rem);
+    --h2-size: clamp(1.3rem, 5vw, 2rem);
+    --h3-size: clamp(1rem, 3.5vw, 1.6rem);
+    --body-size: clamp(0.85rem, 2.8vw, 1.2rem);
+    --small-size: clamp(0.75rem, 2.2vw, 1rem);
+  }
+  .grid { grid-template-columns: 1fr; }
+  .two-col { flex-direction: column !important; }
+  .slide-content[style*="flex-direction: row"] {
+    flex-direction: column !important;
+  }
+  .slide-content[style*="flex-direction: row"] > * {
+    flex: none !important;
+    width: 100% !important;
+  }
+  .slide-content[style*="flex-direction: row"] img {
+    max-height: 35vh !important;
+    height: auto !important;
+    width: auto !important;
+    max-width: 100% !important;
+  }
+  .slide-content[style*="flex-direction: row"] > div[role="img"] {
+    min-height: 35vh !important;
+  }
+  .slide { overflow-y: auto; }
+  .slide-content { overflow: visible; max-height: none; }
+  .slide-content[style*="flex-direction: row"] > div[style*="position: relative"] > div[style*="position: absolute"] {
+    position: static !important;
+    margin-top: clamp(0.5rem, 2vh, 1rem);
+  }
+  .slide-content[style*="flex-direction: row"] > div[style*="position: relative"] {
+    padding-top: clamp(1.5rem, 4vh, 3rem) !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.2s !important;
+  }
+  html { scroll-behavior: auto; }
+}
+
+/* ===========================================
+   THEME — SCHOLAR'S PAPER
+   =========================================== */
+body { background: var(--paper); font-family: var(--font-body); color: var(--foreground); }
+
+.paper-texture {
+  position: absolute; inset: 0; pointer-events: none; z-index: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");
+  opacity: 0.5;
+}
+
+.ink-wash-tr {
+  position: absolute; top: -15%; right: -5%;
+  width: 50vw; height: 50vw;
+  border-radius: 45% 55% 50% 50% / 50% 45% 55% 50%;
+  background: radial-gradient(ellipse at 40% 40%, rgba(0,0,0,0.045) 0%, rgba(0,0,0,0.02) 40%, transparent 65%);
+  filter: blur(30px); pointer-events: none; z-index: 0;
+}
+.ink-wash-bl {
+  position: absolute; bottom: -20%; left: -10%;
+  width: 35vw; height: 35vw; border-radius: 50%;
+  background: radial-gradient(ellipse at center, rgba(194,78,56,0.03) 0%, rgba(201,169,110,0.015) 40%, transparent 65%);
+  filter: blur(50px); pointer-events: none; z-index: 0;
+}
+
+.accent-bar {
+  position: absolute;
+  top: clamp(1.5rem, 4vh, 3rem);
+  left: max(0px, calc(var(--slide-padding) - 0.9rem));
+  width: 3px; height: clamp(20px, 3.5vh, 36px);
+  background: var(--clay);
+  z-index: 2;
+}
+
+.slide-number {
+  position: absolute;
+  bottom: clamp(1rem, 3vh, 2rem);
+  left: clamp(1.5rem, 4vw, 3rem);
+  font-family: var(--font-body);
+  font-size: var(--small-size);
+  font-weight: 500;
+  color: var(--border);
+  letter-spacing: 0.05em;
+  z-index: 2;
+}
+
+/* ===========================================
+   TYPOGRAPHY
+   =========================================== */
+h1 {
+  font-family: var(--font-display);
+  font-size: var(--title-size);
+  font-weight: 600;
+  color: var(--foreground);
+  letter-spacing: 0.01em;
+  line-height: 1.08;
+}
+
+h2 {
+  font-family: var(--font-display);
+  font-size: var(--h2-size);
+  font-weight: 600;
+  color: var(--foreground);
+  line-height: 1.15;
+  margin-bottom: var(--content-gap);
+}
+
+h3 {
+  font-family: var(--font-display);
+  font-size: var(--h3-size);
+  font-weight: 600;
+  color: var(--foreground);
+  line-height: 1.25;
+}
+
+p, li {
+  font-family: var(--font-body);
+  font-size: var(--body-size);
+  line-height: 1.55;
+  color: var(--foreground);
+}
+
+.text-muted { color: var(--muted); }
+.text-clay { color: var(--clay); }
+.text-gold { color: var(--gold); }
+.font-cjk { font-family: var(--font-cjk); }
+.font-mono { font-family: var(--font-mono); font-size: var(--code-size); }
+.font-italic { font-style: italic; }
+.font-light { font-weight: 300; }
+
+.seal-mark {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: clamp(48px, 6vw, 72px); height: clamp(48px, 6vw, 72px);
+  border: 2px solid var(--clay);
+  font-family: var(--font-cjk);
+  color: var(--clay);
+  font-size: clamp(1.2rem, 2.8vw, 1.8rem);
+  font-weight: 600;
+  transform: rotate(-3deg);
+}
+
+/* ===========================================
+   ANIMATIONS
+   =========================================== */
+.reveal {
+  opacity: 0; transform: translateY(25px);
+  transition: opacity var(--duration-normal) var(--ease-out-expo),
+              transform var(--duration-normal) var(--ease-out-expo);
+}
+.slide.visible .reveal { opacity: 1; transform: translateY(0); }
+.reveal:nth-child(1) { transition-delay: 0.1s; }
+.reveal:nth-child(2) { transition-delay: 0.2s; }
+.reveal:nth-child(3) { transition-delay: 0.3s; }
+.reveal:nth-child(4) { transition-delay: 0.4s; }
+.reveal:nth-child(5) { transition-delay: 0.5s; }
+.reveal:nth-child(6) { transition-delay: 0.6s; }
+
+.reveal-stamp {
+  opacity: 0; transform: rotate(-3deg) scale(1.4);
+  transition: opacity 0.4s ease-out, transform 0.4s ease-out;
+}
+.slide.visible .reveal-stamp { opacity: 1; transform: rotate(-3deg) scale(1); }
+
+.reveal-scale {
+  opacity: 0; transform: scale(0.92);
+  transition: opacity 0.6s var(--ease-out-expo), transform 0.6s var(--ease-out-expo);
+}
+.slide.visible .reveal-scale { opacity: 1; transform: scale(1); }
+
+.reveal-left {
+  opacity: 0; transform: translateX(-30px);
+  transition: opacity 0.6s var(--ease-out-expo), transform 0.6s var(--ease-out-expo);
+}
+.slide.visible .reveal-left { opacity: 1; transform: translateX(0); }
+
+/* ===========================================
+   LAYOUT HELPERS
+   =========================================== */
+.centered { text-align: center; align-items: center; }
+.two-col {
+  display: flex; gap: clamp(1rem, 3vw, 3rem);
+  align-items: center;
+}
+.two-col > * { flex: 1; min-width: 0; }
+.two-col .col-narrow { flex: 0 0 auto; max-width: 45%; }
+
+.image-grid {
+  display: grid;
+  gap: clamp(0.4rem, 1vw, 0.8rem);
+}
+.image-grid.cols-3 { grid-template-columns: repeat(3, 1fr); }
+.image-grid.cols-5 { grid-template-columns: repeat(5, 1fr); }
+.image-grid img {
+  width: 100%; border-radius: clamp(4px, 0.5vw, 8px);
+  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+}
+
+.quote-block {
+  border-left: 3px solid var(--clay);
+  padding-left: clamp(0.8rem, 1.5vw, 1.2rem);
+  font-family: var(--font-display);
+  font-size: clamp(1rem, 2vw, 1.5rem);
+  font-style: italic;
+  color: var(--foreground);
+  line-height: 1.5;
+}
+
+/* Venue-readable prompt slide (large room / projector) */
+.prompt-venue-hero {
+  font-family: var(--font-display);
+  font-size: clamp(1.45rem, 3.8vw, 2.65rem);
+  font-weight: 600;
+  line-height: 1.35;
+  max-width: min(92vw, 880px);
+  text-align: center;
+  color: var(--foreground);
+}
+.prompt-venue-beats {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(0.65rem, 1.8vh, 1.25rem);
+  max-width: min(88vw, 820px);
+  margin: 0 auto;
+  padding: 0;
+}
+.prompt-venue-beats li {
+  font-family: var(--font-body);
+  font-size: clamp(1.2rem, 2.7vw, 2rem);
+  line-height: 1.45;
+  padding-left: clamp(0.75rem, 1.4vw, 1.1rem);
+  border-left: 4px solid var(--clay);
+}
+.prompt-venue-beats li strong {
+  font-weight: 600;
+  color: var(--foreground);
+}
+.prompt-venue-foot {
+  font-size: clamp(1.2rem, 2.8vw, 2rem);
+  color: var(--clay);
+  font-weight: 600;
+  text-align: center;
+}
+
+.code-block {
+  background: rgba(0,0,0,0.04);
+  border: 1px solid var(--border);
+  border-radius: clamp(4px, 0.5vw, 8px);
+  padding: clamp(0.6rem, 1.5vw, 1.2rem);
+  font-family: var(--font-mono);
+  font-size: var(--code-size);
+  line-height: 1.6;
+  overflow: hidden;
+  white-space: pre-wrap;
+  color: var(--foreground);
+}
+.code-block .comment { color: var(--muted); }
+.code-block .accent { color: var(--clay); }
+
+.tag {
+  display: inline-block;
+  font-family: var(--font-body);
+  font-size: var(--small-size);
+  font-weight: 500;
+  color: var(--clay);
+  border: 1px solid var(--clay-medium);
+  padding: clamp(2px, 0.3vh, 4px) clamp(6px, 0.8vw, 12px);
+  border-radius: 2px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.stat-number {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 5vw, 4rem);
+  font-weight: 700;
+  color: var(--clay);
+  line-height: 1;
+}
+
+.stat-label {
+  font-family: var(--font-body);
+  font-size: var(--small-size);
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.table-simple {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--body-size);
+}
+.table-simple th {
+  text-align: left;
+  font-weight: 500;
+  color: var(--muted);
+  font-size: var(--small-size);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: clamp(0.3rem, 0.6vh, 0.5rem) clamp(0.3rem, 0.5vw, 0.5rem);
+  border-bottom: 1px solid var(--border);
+}
+.table-simple td {
+  padding: clamp(0.3rem, 0.6vh, 0.5rem) clamp(0.3rem, 0.5vw, 0.5rem);
+  border-bottom: 1px solid rgba(232,230,220,0.5);
+  vertical-align: top;
+}
+.table-simple .style-name { font-weight: 600; white-space: nowrap; }
+.table-simple .style-dot {
+  display: inline-block; width: 8px; height: 8px;
+  border-radius: 50%; margin-right: 6px;
+  vertical-align: middle;
+}
+
+.skill-card {
+  background: var(--tone);
+  border: 1px solid var(--border);
+  border-radius: clamp(4px, 0.5vw, 8px);
+  padding: clamp(0.5rem, 1vw, 0.8rem);
+}
+.skill-card h4 {
+  font-family: var(--font-mono);
+  font-size: var(--small-size);
+  font-weight: 500;
+  color: var(--clay);
+  margin-bottom: 0.25em;
+}
+.skill-card p {
+  font-size: var(--small-size);
+  color: var(--muted);
+  line-height: 1.4;
+}
+
+.comparison {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: clamp(0.5rem, 1.5vw, 1.5rem);
+}
+.comparison-item { text-align: center; }
+.comparison-item img {
+  width: 100%; border-radius: clamp(4px, 0.5vw, 8px);
+  max-height: min(35vh, 280px); object-fit: cover;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+}
+.comparison-label {
+  font-size: var(--small-size);
+  color: var(--muted);
+  margin-top: clamp(0.3rem, 0.5vh, 0.5rem);
+}
+.comparison-label.bad { color: var(--muted); }
+.comparison-label.good { color: var(--clay); font-weight: 500; }
+
+/* Iterative loop diagram */
+.loop-diagram {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(0.5rem, 1.5vw, 1.2rem);
+  flex-wrap: wrap;
+  margin: clamp(1.5rem, 5vh, 4rem) auto;
+  max-width: min(92vw, 1100px);
+}
+.loop-node {
+  background: var(--tone);
+  border: 3px solid var(--border);
+  border-radius: clamp(8px, 1.2vw, 16px);
+  padding: clamp(1rem, 2.5vw, 2rem) clamp(1.2rem, 2.5vw, 2.5rem);
+  text-align: center;
+  flex: 1;
+  min-width: 160px;
+}
+.loop-node.active {
+  border-color: var(--clay);
+  background: var(--clay-light);
+}
+.loop-node-title {
+  font-family: var(--font-display);
+  font-size: var(--h3-size);
+  font-weight: 600;
+  margin-bottom: 0.3em;
+}
+.loop-node-sub {
+  font-size: var(--body-size);
+  color: var(--muted);
+}
+.loop-arrow {
+  font-size: clamp(1.8rem, 3.5vw, 3rem);
+  color: var(--clay);
+  flex-shrink: 0;
+}
+
+/* Timeline */
+.timeline {
+  display: flex;
+  align-items: flex-start;
+  gap: 0;
+  max-width: min(90vw, 900px);
+  margin: clamp(0.5rem, 2vh, 1.5rem) auto;
+}
+.timeline-item {
+  flex: 1;
+  text-align: center;
+  position: relative;
+  padding-top: clamp(1.5rem, 3vh, 2.5rem);
+}
+.timeline-item::before {
+  content: '';
+  position: absolute;
+  top: clamp(0.6rem, 1.2vh, 1rem);
+  left: 0; right: 0;
+  height: 2px;
+  background: var(--border);
+}
+.timeline-item:first-child::before { left: 50%; }
+.timeline-item:last-child::before { right: 50%; }
+.timeline-dot {
+  position: absolute;
+  top: clamp(0.3rem, 0.8vh, 0.7rem);
+  left: 50%;
+  transform: translateX(-50%);
+  width: clamp(10px, 1.2vw, 14px);
+  height: clamp(10px, 1.2vw, 14px);
+  border-radius: 50%;
+  background: var(--clay);
+  z-index: 1;
+}
+.timeline-label {
+  font-family: var(--font-body);
+  font-size: var(--body-size);
+  font-weight: 600;
+  color: var(--clay);
+}
+.timeline-desc {
+  font-size: var(--small-size);
+  color: var(--muted);
+  margin-top: 0.2em;
+}
+
+/* ===========================================
+   PODCAST SLIDE — NEON AMBER ON BLACK
+   =========================================== */
+.podcast-slide {
+  background: #070603;
+}
+.podcast-slide .slide-number {
+  color: rgba(240, 221, 180, 0.25);
+}
+.podcast-card {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(2rem, 5vw, 5rem);
+  flex-wrap: wrap;
+}
+.podcast-art {
+  width: clamp(200px, 28vw, 380px);
+  height: clamp(200px, 28vw, 380px);
+  border-radius: clamp(12px, 1.5vw, 24px);
+  object-fit: cover;
+  box-shadow: 0 0 60px rgba(255, 184, 0, 0.15), 0 8px 32px rgba(0,0,0,0.5);
+}
+.podcast-info {
+  max-width: 400px;
+}
+.podcast-title {
+  font-family: var(--font-body);
+  font-size: var(--title-size);
+  font-weight: 600;
+  color: #f0ddb4;
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+}
+.podcast-tagline {
+  font-family: var(--font-body);
+  font-size: var(--body-size);
+  color: #8a7a5c;
+  line-height: 1.5;
+  margin-top: clamp(0.5rem, 1.5vh, 1rem);
+}
+.podcast-url {
+  font-family: var(--font-mono);
+  font-size: var(--small-size);
+  color: #ffb800;
+  margin-top: clamp(0.8rem, 2vh, 1.5rem);
+  letter-spacing: 0.02em;
+}
+
+/* ===========================================
+   PROGRESS BAR
+   =========================================== */
+.progress-bar {
+  position: fixed; top: 0; left: 0;
+  height: 2px; background: var(--clay);
+  z-index: 9999; transition: width 0.3s ease;
+  width: 0;
+}
+
+/* ===========================================
+   NAV DOTS
+   =========================================== */
+.nav-dots {
+  position: fixed; right: clamp(0.5rem, 1.5vw, 1.5rem);
+  top: 50%; transform: translateY(-50%);
+  display: flex; flex-direction: column;
+  gap: clamp(4px, 0.6vh, 8px);
+  z-index: 9998;
+}
+.nav-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--border);
+  border: none; cursor: pointer;
+  transition: all 0.3s ease;
+  padding: 0;
+}
+.nav-dot.active {
+  background: var(--clay);
+  transform: scale(1.4);
+}
+
+/* ===========================================
+   INLINE EDITING
+   =========================================== */
+.edit-hotzone {
+  position: fixed; top: 0; left: 0;
+  width: 80px; height: 80px;
+  z-index: 10000; cursor: pointer;
+}
+.edit-toggle {
+  position: fixed; top: clamp(0.5rem, 1.5vh, 1rem); left: clamp(0.5rem, 1.5vw, 1rem);
+  background: var(--tone); border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: clamp(4px, 0.5vh, 8px) clamp(8px, 1vw, 12px);
+  font-size: var(--small-size);
+  color: var(--muted);
+  cursor: pointer;
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.3s ease;
+  z-index: 10001;
+}
+.edit-toggle.show, .edit-toggle.active { opacity: 1; pointer-events: auto; }
+.edit-banner {
+  position: fixed; top: 0; left: 0; right: 0;
+  background: var(--clay); color: #fff;
+  text-align: center; font-size: var(--small-size);
+  padding: clamp(2px, 0.3vh, 4px) 0;
+  z-index: 9999;
+  display: none;
+}
+.edit-banner.active { display: block; }
+body.edit-active [contenteditable] {
+  outline: 1px dashed var(--clay-medium);
+  outline-offset: 2px;
+  cursor: text;
+}
+
+/* ===========================================
+   SLIDE-SPECIFIC STYLES
+   =========================================== */
+.title-slide .slide-content {
+  align-items: center; text-align: center;
+}
+.title-slide .divider {
+  width: clamp(40px, 8vw, 80px); height: 1px;
+  background: var(--clay); opacity: 0.5;
+  margin: clamp(0.8rem, 2vh, 1.5rem) 0;
+}
+
+.section-slide {
+  background: var(--tone);
+}
+.section-slide .slide-content {
+  align-items: center; text-align: center;
+}
+
+</style>
+</head>
+<body>
+
+<!-- Progress bar -->
+<div class="progress-bar" id="progressBar"></div>
+
+<!-- Nav dots -->
+<nav class="nav-dots" id="navDots" aria-label="Slide navigation"></nav>
+
+<!-- Edit mode -->
+<div class="edit-hotzone" id="editHotzone"></div>
+<button class="edit-toggle" id="editToggle" title="Edit mode (E)">&#9998; Edit</button>
+<div class="edit-banner" id="editBanner">Edit mode — click any text to edit &middot; Ctrl+S to save</div>
+
+
+<section class="slide title-slide">
+  <div class="paper-texture"></div>
+  <div class="ink-wash-tr"></div>
+  <div class="ink-wash-bl"></div>
+  <div class="slide-content">
+    <div class="seal-mark reveal-stamp" style="margin-bottom: clamp(1rem, 3vh, 2.5rem)">硯台</div>
+    <h1 class="reveal">Teaching Taste<br>to an Agent</h1>
+    <p class="reveal font-light" style="font-size: var(--h3-size); color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; margin-top: clamp(0.3rem, 1vh, 0.8rem);">Ink Painting Prompts from Classical Verse</p>
+    <div class="divider reveal"></div>
+    <p class="reveal font-italic" style="font-family: var(--font-display); font-size: var(--body-size); color: var(--muted);">Augustin Chan &middot; HKOSCon 2026 &middot; 6 June</p>
+  </div>
+  <div class="slide-number" data-fixed>INKSTONE 硯台</div>
+</section>
+
+<section class="slide">
+  <div class="slide-content" style="padding: 0; max-height: none; width: 100%; height: 100%; background: #000; position: relative;">
+    <img src="daycamp-bw.webp" alt="Hillcrest Day Camp group photo, New York" style="width: 100%; height: 100%; max-height: none; object-fit: contain; object-position: center;">
+    <div class="reveal" style="transition-delay: 0.3s; position: absolute; left: clamp(1.5rem, 4vw, 4rem); bottom: clamp(1.5rem, 5vh, 4rem); text-align: left;">
+      <p style="font-family: var(--font-display); font-weight: 700; color: #fff; font-size: clamp(2rem, 5.5vw, 4.5rem); line-height: 1.05; text-shadow: 0 2px 6px rgba(0,0,0,0.85), 0 4px 24px rgba(0,0,0,0.7); margin: 0;">Queens, New York</p>
+      <p style="font-family: var(--font-display); font-style: italic; color: #fff; font-size: clamp(1.1rem, 2.6vw, 2.2rem); text-shadow: 0 2px 6px rgba(0,0,0,0.9), 0 4px 18px rgba(0,0,0,0.7); margin: clamp(0.2rem, 0.6vh, 0.5rem) 0 0;">early 1980s</p>
+    </div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="paper-texture"></div>
+  <div class="slide-content" style="flex-direction: row; padding: 0; gap: 0; max-height: none;">
+    <!-- Photo — tall left panel -->
+    <div class="reveal-scale" style="flex: 0 0 auto; width: clamp(280px, 35vw, 480px); align-self: stretch; overflow: hidden; background: var(--tone);">
+      <img src="speaker-portrait.webp" alt="Augustin Chan" style="width: 100%; height: 100%; max-height: none; object-fit: cover; object-position: center 20%;">
+    </div>
+    <!-- Info — right side -->
+    <div style="flex: 1; display: flex; flex-direction: column; justify-content: flex-start; padding: var(--slide-padding); padding-top: clamp(3rem, 8vh, 6rem); padding-left: clamp(2rem, 4vw, 4rem); gap: clamp(0.5rem, 1.5vh, 1rem); position: relative;">
+      <h2 class="reveal" style="font-size: var(--title-size); margin-bottom: 0; border-left: 4px solid var(--clay); padding-left: clamp(0.5rem, 1vw, 1rem);">Augustin Chan</h2>
+      <p class="reveal" style="font-size: var(--h3-size); color: var(--clay); font-weight: 500;">CTO &amp; Founder, Digital Rain Technologies</p>
+      <p class="reveal" style="font-size: var(--h3-size); line-height: 1.6;"><strong>sixlines.online</strong> &mdash; the app behind this talk</p>
+      <p class="reveal" style="font-size: var(--h3-size); line-height: 1.6;">Co-host, <strong>hongkongaipodcast.com</strong></p>
+      <p class="reveal" style="font-size: var(--h3-size); line-height: 1.6;">Writing at <strong>augustinchan.dev</strong></p>
+      <div class="reveal" style="transition-delay: 0.4s; position: absolute; bottom: clamp(1.5rem, 4vh, 3rem); right: clamp(1.5rem, 4vw, 3rem); text-align: center;">
+        <img src="qr-linkedin.png" alt="LinkedIn QR" style="width: clamp(140px, 18vw, 240px); border-radius: clamp(4px, 0.5vw, 8px);">
+        <p style="font-size: var(--body-size); color: var(--muted); margin-top: 0.3em;">LinkedIn</p>
+      </div>
+    </div>
+  </div>
+  <div class="slide-number"></div>
+</section>
+
+<section class="slide">
+  <div class="paper-texture"></div>
+  <div class="ink-wash-tr"></div>
+  <div class="accent-bar"></div>
+  <div class="slide-content centered">
+    <h2 class="reveal" style="margin-bottom: clamp(0.8rem, 2vh, 1.5rem);">The I-Ching &middot; <span class="font-cjk">易經</span></h2>
+    <p class="reveal" style="max-width: 700px; text-align: center; font-size: var(--h3-size);">64 hexagrams. Six lines — solid or broken.<br>Every possible pattern of change.</p>
+    <div class="reveal" style="transition-delay: 0.2s; display: flex; align-items: center; gap: clamp(2rem, 5vw, 4rem); margin: clamp(2rem, 5vh, 4rem) 0;">
+      <!-- Hexagram lines (style from 8bitoracle) -->
+      <div style="display: flex; flex-direction: column; align-items: center; width: clamp(100px, 14vw, 180px);">
+        <!-- Upper trigram: Gen/Mountain — solid, broken, broken (top to bottom) -->
+        <div style="width: 100%; display: flex; flex-direction: column; gap: clamp(6px, 1vh, 10px);">
+          <div style="width: 100%; height: clamp(10px, 1.5vh, 16px); background: var(--foreground);"></div>
+          <div style="width: 100%; display: flex; justify-content: space-between;"><div style="width: 45%; height: clamp(10px, 1.5vh, 16px); background: var(--foreground);"></div><div style="width: 45%; height: clamp(10px, 1.5vh, 16px); background: var(--foreground);"></div></div>
+          <div style="width: 100%; display: flex; justify-content: space-between;"><div style="width: 45%; height: clamp(10px, 1.5vh, 16px); background: var(--foreground);"></div><div style="width: 45%; height: clamp(10px, 1.5vh, 16px); background: var(--foreground);"></div></div>
+        </div>
+        <!-- Gap between trigrams -->
+        <div style="height: clamp(1.2rem, 3vh, 2.5rem);"></div>
+        <!-- Lower trigram: Kan/Water — broken, solid, broken (top to bottom) -->
+        <div style="width: 100%; display: flex; flex-direction: column; gap: clamp(6px, 1vh, 10px);">
+          <div style="width: 100%; display: flex; justify-content: space-between;"><div style="width: 45%; height: clamp(10px, 1.5vh, 16px); background: var(--foreground);"></div><div style="width: 45%; height: clamp(10px, 1.5vh, 16px); background: var(--foreground);"></div></div>
+          <div style="width: 100%; height: clamp(10px, 1.5vh, 16px); background: var(--foreground);"></div>
+          <div style="width: 100%; display: flex; justify-content: space-between;"><div style="width: 45%; height: clamp(10px, 1.5vh, 16px); background: var(--foreground);"></div><div style="width: 45%; height: clamp(10px, 1.5vh, 16px); background: var(--foreground);"></div></div>
+        </div>
+      </div>
+      <!-- Trigram labels -->
+      <div style="display: flex; flex-direction: column; color: var(--muted); gap: clamp(0.5rem, 1.5vh, 1.2rem);">
+        <div style="display: flex; align-items: baseline; gap: clamp(0.4rem, 0.8vw, 0.8rem);">
+          <span style="font-family: var(--font-cjk); font-size: clamp(1.8rem, 4vw, 3.5rem);">艮</span>
+          <span style="font-size: var(--body-size); font-family: var(--font-body);">Mountain</span>
+        </div>
+        <div style="display: flex; align-items: baseline; gap: clamp(0.4rem, 0.8vw, 0.8rem);">
+          <span style="font-family: var(--font-cjk); font-size: clamp(1.8rem, 4vw, 3.5rem);">坎</span>
+          <span style="font-size: var(--body-size); font-family: var(--font-body);">Water</span>
+        </div>
+      </div>
+    </div>
+    <p class="reveal" style="transition-delay: 0.3s; font-size: var(--h3-size); color: var(--muted);"><span class="font-cjk">蒙</span> &middot; Youthful Folly</p>
+  </div>
+  <div class="slide-number"></div>
+</section>
+
+<section class="slide">
+  <div class="paper-texture"></div>
+  <div class="accent-bar"></div>
+  <div class="slide-content" style="flex-direction: row; padding: 0; gap: 0; max-height: none;">
+    <div class="reveal-scale" style="flex: 0 0 auto; width: clamp(280px, 30vw, 440px); align-self: stretch; overflow: hidden; background: var(--tone); display: flex; align-items: center; justify-content: center;">
+      <img src="screenshot-yilin-verse.webp" alt="Six Lines app — verse with ink painting" style="width: 85%; height: 92%; max-height: none; object-fit: contain;">
+    </div>
+    <div style="flex: 1; display: flex; flex-direction: column; justify-content: center; padding: var(--slide-padding); padding-left: clamp(2rem, 4vw, 4rem); gap: clamp(1rem, 2.5vh, 2rem);">
+      <h2 class="reveal">The Challenge</h2>
+      <p class="reveal" style="font-size: var(--h3-size); line-height: 1.5;">Generate <strong>4,096 unique ink paintings</strong> — one for every verse in the Jiaoshi Yilin <span class="font-cjk">焦氏易林</span></p>
+      <div class="reveal" style="display: flex; gap: clamp(1.5rem, 3vw, 3rem); flex-wrap: wrap;">
+        <div>
+          <div class="stat-number">4,096</div>
+          <div class="stat-label">verses</div>
+        </div>
+        <div>
+          <div class="stat-number">64&times;64</div>
+          <div class="stat-label">hexagram pairs</div>
+        </div>
+        <div>
+          <div class="stat-number">~40 <span style="font-size: 0.5em; font-weight: 400;">BCE</span></div>
+          <div class="stat-label">Jiaoshi Yilin</div>
+        </div>
+      </div>
+      <p class="reveal text-muted" style="font-size: var(--body-size);">Built for <strong>SixLines.online</strong> — I-Ching reference &amp; Chinese almanac <svg style="display:inline-block;vertical-align:-0.1em;width:0.85em;height:0.85em;" viewBox="0 0 384 512" fill="currentColor"><path d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5c0 26.2 4.8 53.3 14.4 81.2 12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zm-56.6-164.2c27.3-32.4 24.8-61.9 24-72.5-24.1 1.4-52 16.4-67.9 34.9-17.5 19.8-27.8 44.3-25.6 71.9 26.1 2 49.9-11.4 69.5-34.3z"/></svg> <svg style="display:inline-block;vertical-align:-0.1em;width:0.85em;height:0.85em;" viewBox="0 0 576 512" fill="currentColor"><path d="M420.55 301.93a24 24 0 1 1 24-24 24 24 0 0 1-24 24m-265.1 0a24 24 0 1 1 24-24 24 24 0 0 1-24 24m273.7-144.48l47.94-83a10 10 0 1 0-17.27-10l-48.54 84.07a301 301 0 0 0-246.56 0L116.18 64.45a10 10 0 1 0-17.27 10l47.94 83C64.53 202.22 8.24 285.55 0 384h576c-8.24-98.45-64.54-181.78-146.85-226.55"/></svg></p>
+    </div>
+  </div>
+  <div class="slide-number"></div>
+</section>
+
+<section class="slide">
+  <div class="paper-texture"></div>
+  <div class="ink-wash-tr"></div>
+  <div class="ink-wash-bl"></div>
+  <div class="accent-bar"></div>
+  <div class="slide-content" style="flex-direction: row; padding: 0; gap: 0; max-height: none;">
+    <div class="reveal-scale" style="flex: 1; background: url('taste-elitism.webp') center 20% / 100% no-repeat #f5f0eb;" role="img" aria-label="New Yorker-style cartoon of a gentleman swirling wine while reviewing code"></div>
+    <div style="flex: 1; display: flex; flex-direction: column; justify-content: center; padding: var(--slide-padding); padding-left: clamp(2rem, 4vw, 4rem); gap: clamp(0.5rem, 1.5vh, 1rem);">
+      <div class="tag reveal" style="margin-bottom: clamp(0.4rem, 1vh, 0.8rem);">Thesis</div>
+      <h2 class="reveal" style="font-size: var(--title-size); max-width: 500px;">What Is Taste?</h2>
+      <div class="reveal" style="max-width: 500px; margin-top: clamp(0.5rem, 1.5vh, 1rem);">
+        <div class="quote-block" style="font-size: var(--h3-size); line-height: 1.5; border-left-width: 4px;">
+          Taste is pattern recognition earned through iteration against good references. You can't define it upfront. It emerges through cycles of judgment.
+        </div>
+      </div>
+      <p class="reveal text-muted" style="font-size: var(--body-size); margin-top: clamp(0.5rem, 1.5vh, 1rem); max-width: 500px;">The challenge: how do you teach something you can only recognize — never fully articulate — to a machine?</p>
+    </div>
+  </div>
+  <div class="slide-number"></div>
+</section>
+
+<section class="slide">
+  <div class="paper-texture"></div>
+  <div class="accent-bar"></div>
+  <div class="slide-content centered">
+    <h2 class="reveal">The Iterative Loop</h2>
+    <div style="position: relative; max-width: min(72vw, 800px); margin: clamp(1.5rem, 4vh, 3rem) auto 0;">
+      <div class="loop-diagram reveal-scale" style="transition-delay: 0.2s; margin: 0; justify-content: center;">
+        <div class="loop-node active" style="flex: 0 0 clamp(160px, 22vw, 280px);">
+          <div class="loop-node-title">Human Judges Output</div>
+          <div class="loop-node-sub">"Like this, not that"</div>
+        </div>
+        <div class="loop-arrow">&rarr;</div>
+        <div class="loop-node" style="flex: 0 0 clamp(160px, 22vw, 280px);">
+          <div class="loop-node-title">AI Extracts &amp; Encodes Rules</div>
+          <div class="loop-node-sub">Figures out why, updates the skill</div>
+        </div>
+      </div>
+      <div class="reveal-scale" style="transition-delay: 0.4s; width: 80%; margin: 0 auto; height: clamp(22px, 3vh, 36px); border-bottom: 3px solid var(--clay); border-left: 3px solid var(--clay); border-right: 3px solid var(--clay); border-radius: 0 0 clamp(10px, 1.5vw, 18px) clamp(10px, 1.5vw, 18px); position: relative;">
+        <div style="position: absolute; left: 1.5px; top: 0; transform: translate(-50%, -100%); width: 0; height: 0; border-left: clamp(7px, 1vw, 11px) solid transparent; border-right: clamp(7px, 1vw, 11px) solid transparent; border-bottom: clamp(9px, 1.2vw, 14px) solid var(--clay);"></div>
+      </div>
+    </div>
+    <p class="reveal" style="font-size: var(--h2-size); color: var(--clay); font-weight: 600; margin-top: clamp(1.5rem, 4vh, 3rem);">Re-run. Judge again. Repeat.</p>
+    <p class="reveal text-muted" style="font-size: var(--body-size); margin-top: clamp(0.5rem, 1.5vh, 1rem); max-width: 800px;">The pipeline is a black box. You can't reason about the model — you can only judge its output.</p>
+  </div>
+  <div class="slide-number"></div>
+</section>
+
+
+<section class="slide">
+  <div class="paper-texture"></div>
+  <div class="accent-bar"></div>
+  <div class="slide-content">
+    <h2 class="reveal">Not All Verses Paint Pictures</h2>
+    <div class="reveal" style="display: flex; gap: clamp(1rem, 2vw, 2rem); margin-top: clamp(0.5rem, 1.5vh, 1rem);">
+      <div style="flex: 1; border-left: 3px solid var(--clay); padding-left: clamp(0.5rem, 1vw, 1rem);">
+        <div class="stat-number" style="font-size: clamp(1.5rem, 3vw, 2.5rem);">18.6%</div>
+        <div class="stat-label" style="margin-bottom: clamp(0.4rem, 1vh, 0.6rem);">Rich imagery</div>
+        <p class="font-cjk" style="font-size: var(--small-size); line-height: 1.8;">霜降閉戶，熟出隱處<br>不見日月，與死爲伍</p>
+        <p class="text-muted" style="font-size: var(--small-size); font-style: italic; margin-top: 0.3em;">Frost falls, doors seal shut. Hidden from sun and moon, dwelling with death.</p>
+        <p class="font-cjk" style="font-size: var(--small-size); line-height: 1.8; margin-top: clamp(0.3rem, 0.8vh, 0.5rem);">溫山松柏，常茂不落<br>鸞鳳所庇，得其歡樂</p>
+        <p class="text-muted" style="font-size: var(--small-size); font-style: italic; margin-top: 0.3em;">Warm mountain pines, ever verdant. Sheltered by phoenix, finding joy.</p>
+      </div>
+      <div style="flex: 1; border-left: 3px solid var(--gold); padding-left: clamp(0.5rem, 1vw, 1rem);">
+        <div class="stat-number" style="font-size: clamp(1.5rem, 3vw, 2.5rem); color: var(--gold);">50.0%</div>
+        <div class="stat-label" style="margin-bottom: clamp(0.4rem, 1vh, 0.6rem);">Needs expansion</div>
+        <p class="font-cjk" style="font-size: var(--small-size); line-height: 1.8;">明月照夜，使暗為晝</p>
+        <p class="text-muted" style="font-size: var(--small-size); font-style: italic; margin-top: 0.3em;">Bright moon lights the night, turning dark to day.</p>
+        <p class="font-cjk" style="font-size: var(--small-size); line-height: 1.8; margin-top: clamp(0.3rem, 0.8vh, 0.5rem);">跛躓未起，失利後市<br>不得鹿子</p>
+        <p class="text-muted" style="font-size: var(--small-size); font-style: italic; margin-top: 0.3em;">Stumbling, not yet risen. Missed the market — the fawn escapes.</p>
+      </div>
+      <div style="flex: 1; border-left: 3px solid var(--border); padding-left: clamp(0.5rem, 1vw, 1rem);">
+        <div class="stat-number" style="font-size: clamp(1.5rem, 3vw, 2.5rem); color: var(--muted);">31.4%</div>
+        <div class="stat-label" style="margin-bottom: clamp(0.4rem, 1vh, 0.6rem);">Abstract / no imagery</div>
+        <p class="font-cjk" style="font-size: var(--small-size); line-height: 1.8;">元吉无咎，安寧不殆</p>
+        <p class="text-muted" style="font-size: var(--small-size); font-style: italic; margin-top: 0.3em;">Great fortune, no blame. Peace without peril.</p>
+        <p class="font-cjk" style="font-size: var(--small-size); line-height: 1.8; margin-top: clamp(0.3rem, 0.8vh, 0.5rem);">初憂不安，後得笑懽<br>雖懼無患</p>
+        <p class="text-muted" style="font-size: var(--small-size); font-style: italic; margin-top: 0.3em;">First worry, then laughter. Though fearful, no harm.</p>
+        <p class="font-cjk" style="font-size: var(--small-size); line-height: 1.8; margin-top: clamp(0.3rem, 0.8vh, 0.5rem);">賀喜從福，日利蕃息</p>
+        <p class="text-muted" style="font-size: var(--small-size); font-style: italic; margin-top: 0.3em;">Celebrations follow fortune. Blessings multiply daily.</p>
+      </div>
+    </div>
+  </div>
+  <div class="slide-number"></div>
+</section>
+
+<section class="slide">
+  <div class="paper-texture"></div>
+  <div class="accent-bar"></div>
+  <div class="slide-content centered">
+    <h2 class="reveal" style="margin-bottom: clamp(0.2rem, 0.5vh, 0.4rem);">Round 1: Style as Suffix</h2>
+    <p class="reveal font-mono" style="font-size: var(--small-size); color: var(--muted); margin-bottom: clamp(0.3rem, 1vh, 0.6rem);">"…overflowing well, water branching… <span class="text-clay">Ink wash with soft watercolor tints.</span>"</p>
+    <div class="reveal-scale" style="transition-delay: 0.2s; margin: 0 auto;">
+      <img src="https://hmkcrc9k6rau3h6j.public.blob.vercel-storage.com/round1-well.webp" alt="Round 1 — flat, lifeless ink wash well" style="max-height: min(58vh, 460px); border-radius: clamp(6px, 0.8vw, 12px); box-shadow: 0 6px 30px rgba(0,0,0,0.12); object-fit: contain;">
+    </div>
+    <p class="reveal" style="font-size: var(--body-size); color: var(--muted); margin-top: clamp(0.4rem, 1vh, 0.8rem);">Flat. Lifeless. <span class="text-clay" style="font-weight: 600;">The model treated "ink wash" as a filter, not a language.</span></p>
+  </div>
+  <div class="slide-number"></div>
+</section>
+
+<section class="slide">
+  <div class="paper-texture"></div>
+  <div class="accent-bar"></div>
+  <div class="slide-content centered">
+    <h2 class="reveal" style="margin-bottom: clamp(0.2rem, 0.5vh, 0.4rem);">Round 2: Try a Different Style?</h2>
+    <p class="reveal font-mono" style="font-size: var(--small-size); color: var(--muted); margin-bottom: clamp(0.3rem, 1vh, 0.6rem);">"…overflowing well… <span class="text-clay">Wabi-sabi aesthetic, muted tones.</span>"</p>
+    <div class="reveal-scale" style="transition-delay: 0.2s; margin: 0 auto;">
+      <img src="https://hmkcrc9k6rau3h6j.public.blob.vercel-storage.com/round2-wabisabi.webp" alt="Round 2 wabi-sabi — a photograph, not ink painting" style="max-height: min(58vh, 460px); border-radius: clamp(6px, 0.8vw, 12px); box-shadow: 0 6px 30px rgba(0,0,0,0.12); object-fit: contain;">
+    </div>
+    <p class="reveal" style="font-size: var(--body-size); color: var(--muted); margin-top: clamp(0.4rem, 1vh, 0.8rem);"><span class="text-clay" style="font-weight: 600;">Not even an ink painting.</span> It's a photograph. The style suffix changed the medium entirely.</p>
+  </div>
+  <div class="slide-number"></div>
+</section>
+
+<section class="slide">
+  <div class="paper-texture"></div>
+  <div class="ink-wash-tr"></div>
+  <div class="accent-bar"></div>
+  <div class="slide-content centered">
+    <div class="tag reveal" style="margin-bottom: clamp(1rem, 2.5vh, 2rem);">Core Discovery</div>
+    <h2 class="reveal" style="font-size: var(--title-size); max-width: 800px;">Style Is Not a Suffix</h2>
+    <p class="reveal" style="max-width: 650px; text-align: center; margin: clamp(0.5rem, 1.5vh, 1rem) auto 0;">The prompt must <em>read like the caption under an ink painting</em> — painterly metaphors woven throughout, not appended at the end.</p>
+    <div class="reveal" style="margin-top: clamp(1rem, 2.5vh, 2rem); max-width: 700px; text-align: left;">
+      <div class="code-block"><span class="comment"># Bad — style as suffix</span>
+"A tree on a hill. <span class="accent">Chinese ink painting style.</span>"
+
+<span class="comment"># Good — painterly language embedded in the scene</span>
+"A gnarled pine leans from a cliff face <span class="accent">like a
+brushstroke frozen mid-sweep</span>, roots gripping stone
+above a gorge filled with morning mist. Chinese ink painting."</div>
+    </div>
+  </div>
+  <div class="slide-number"></div>
+</section>
+
+<section class="slide">
+  <div class="paper-texture"></div>
+  <div class="ink-wash-tr"></div>
+  <div class="accent-bar"></div>
+  <div class="slide-content centered">
+    <h2 class="reveal" style="margin-bottom: clamp(0.5rem, 1.2vh, 1rem);">The Breakthrough Prompt</h2>
+    <p class="reveal prompt-venue-hero" style="margin-top: clamp(0.5rem, 1.5vh, 1.25rem);">Write it like the <em>caption under the painting</em> — not a scene plus a style suffix.</p>
+    <p class="reveal text-muted" style="font-size: var(--body-size); margin: clamp(0.8rem, 2vh, 1.5rem) auto 0; max-width: 700px;">Same verse. Three layers, painterly language throughout:</p>
+    <ul class="reveal prompt-venue-beats" style="transition-delay: 0.2s; margin-top: clamp(0.8rem, 2vh, 1.5rem);">
+      <li><strong>Foreground</strong> — well mouth brims over, <span class="text-clay">water sheeting across worn stone</span></li>
+      <li><strong>Midground</strong> — streams diverge over sun-baked ground, <span class="text-clay">carving shallow channels</span></li>
+      <li><strong>Beyond</strong> — <span class="text-clay">desolate hills roll to a hazy horizon</span>, amber glints on the streams</li>
+    </ul>
+    <p class="reveal prompt-venue-foot" style="transition-delay: 0.35s; margin-top: clamp(1rem, 2.5vh, 2rem);">All 7 composition rules — woven in, not listed at the end.</p>
+  </div>
+  <div class="slide-number"></div>
+</section>
+
+<section class="slide">
+  <div class="paper-texture"></div>
+  <div class="accent-bar"></div>
+  <div class="slide-content" style="flex-direction: row; padding: 0; gap: 0; max-height: none;">
+    <div style="flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: var(--slide-padding);">
+      <h2 class="reveal" style="margin-bottom: clamp(0.5rem, 1.2vh, 1rem);"><span class="text-clay">Same verse. All 7 rules.</span></h2>
+      <div class="reveal-scale" style="transition-delay: 0.15s;">
+        <img src="https://cdn.sixlines.online/yilin-inkbrush/48-59.webp" alt="Production result — 48-59 overflowing well, ink-landscape" style="max-height: min(72vh, 580px); border-radius: clamp(6px, 0.8vw, 12px); box-shadow: 0 8px 40px rgba(0,0,0,0.15); object-fit: contain;">
+      </div>
+      <p class="reveal text-muted" style="font-size: var(--small-size); margin-top: clamp(0.4rem, 1vh, 0.8rem);">key 48-59 &middot; <span class="font-cjk">井 &rarr; 渙</span> &middot; ink-landscape &middot; fal-ai/z-image/turbo</p>
+    </div>
+    <div class="reveal" style="transition-delay: 0.3s; flex: 0 0 clamp(340px, 42vw, 620px); align-self: stretch; display: flex; align-items: center; background: var(--tone); border-left: 3px solid var(--border); padding: clamp(1.5rem, 3vh, 2.5rem) clamp(1.5rem, 3vw, 2.5rem);">
+      <p style="font-size: clamp(1.15rem, 2.4vw, 1.75rem); line-height: 1.5; color: var(--foreground); font-family: var(--font-body); font-weight: 300;">An overflowing well sends water spilling in four branching streams across barren hillside, carving shallow channels in the earth. Foreground, the well mouth brims over, water sheeting across worn stone. Midground, the streams diverge eastward, spreading thin over sun-baked ground, nourishing sparse grasses. Beyond, desolate brown hills roll to a hazy horizon, the water lost among them. Amber reflections glint where the shallow streams catch the last daylight. <span style="color: var(--clay); font-weight: 600;">Chinese ink painting.</span></p>
+    </div>
+  </div>
+  <div class="slide-number"></div>
+</section>
+
+
+<section class="slide">
+  <div class="paper-texture"></div>
+  <div class="accent-bar"></div>
+  <div class="slide-content">
+    <h2 class="reveal">What the AI Analyzed</h2>
+    <p class="reveal text-muted" style="margin-bottom: clamp(0.5rem, 1.5vh, 1rem);">The human said &ldquo;this works.&rdquo; The AI figured out <em>why</em>.</p>
+    <div class="two-col" style="align-items: flex-start;">
+      <div style="display: flex; flex-direction: column; gap: clamp(0.6rem, 1.5vh, 1.2rem);">
+        <div class="reveal" style="border-left: 3px solid var(--clay); padding-left: clamp(0.6rem, 1vw, 1rem);">
+          <h3 style="font-size: var(--body-size); margin-bottom: 0.2em;">Language register controls medium</h3>
+          <p class="text-muted" style="font-size: var(--small-size);">Painterly words produce paintings. Descriptive words produce photographs.</p>
+        </div>
+        <div class="reveal" style="border-left: 3px solid var(--gold); padding-left: clamp(0.6rem, 1vw, 1rem);">
+          <h3 style="font-size: var(--body-size); margin-bottom: 0.2em;">Spatial structure creates depth</h3>
+          <p class="text-muted" style="font-size: var(--small-size);">Foreground/midground/background forces the model to compose, not just fill.</p>
+        </div>
+        <div class="reveal" style="border-left: 3px solid var(--muted); padding-left: clamp(0.6rem, 1vw, 1rem);">
+          <h3 style="font-size: var(--body-size); margin-bottom: 0.2em;">Warm accents anchor attention</h3>
+          <p class="text-muted" style="font-size: var(--small-size);">A single point of color in monochrome gives the eye a destination.</p>
+        </div>
+        <div class="reveal" style="border-left: 3px solid var(--border); padding-left: clamp(0.6rem, 1vw, 1rem);">
+          <h3 style="font-size: var(--body-size); margin-bottom: 0.2em;">Framing prevents floating subjects</h3>
+          <p class="text-muted" style="font-size: var(--small-size);">Gates, tree canopies, gorge walls — context creates composition.</p>
+        </div>
+      </div>
+      <div class="reveal-scale" style="transition-delay: 0.3s; flex: 1;">
+        <img src="https://hmkcrc9k6rau3h6j.public.blob.vercel-storage.com/proof-dragon-gate.webp" alt="Dragon Gate — all principles applied" style="width: 100%; border-radius: clamp(6px, 0.8vw, 12px); box-shadow: 0 4px 20px rgba(0,0,0,0.1); max-height: min(60vh, 500px); object-fit: cover;">
+        <p class="text-muted" style="font-size: var(--small-size); margin-top: 0.4em; text-align: center;">All four principles visible</p>
+      </div>
+    </div>
+  </div>
+  <div class="slide-number"></div>
+</section>
+
+<section class="slide">
+  <div class="paper-texture"></div>
+  <div class="accent-bar"></div>
+  <div class="slide-content" style="flex-direction: row; padding: 0; gap: 0; max-height: none;">
+    <div style="flex: 1; align-self: stretch; display: flex; flex-direction: column; justify-content: center; padding: var(--slide-padding); padding-left: clamp(2rem, 5vw, 5rem); background: var(--tone);">
+      <h2 class="reveal" style="margin-bottom: clamp(0.3rem, 0.8vh, 0.5rem);">What the Human Kept</h2>
+      <p class="reveal text-muted" style="font-size: var(--body-size); margin-bottom: clamp(1rem, 2.5vh, 2rem);">The AI distilled these from human preferences:</p>
+      <h3 class="reveal" style="font-size: var(--h3-size); color: var(--clay); margin-bottom: clamp(0.5rem, 1.2vh, 1rem);">7 Composition Rules</h3>
+      <ol class="reveal" style="list-style: none; display: flex; flex-direction: column; gap: clamp(0.4rem, 1vh, 0.8rem); padding: 0;">
+        <li style="font-size: var(--h3-size); display: flex; gap: 0.5em;"><span class="text-clay" style="font-weight: 700;">1.</span> Frame the scene</li>
+        <li style="font-size: var(--h3-size); display: flex; gap: 0.5em;"><span class="text-clay" style="font-weight: 700;">2.</span> Force depth</li>
+        <li style="font-size: var(--h3-size); display: flex; gap: 0.5em;"><span class="text-clay" style="font-weight: 700;">3.</span> Demand contrast</li>
+        <li style="font-size: var(--h3-size); display: flex; gap: 0.5em;"><span class="text-clay" style="font-weight: 700;">4.</span> Warm accent</li>
+        <li style="font-size: var(--h3-size); display: flex; gap: 0.5em;"><span class="text-clay" style="font-weight: 700;">5.</span> Favor diagonals</li>
+        <li style="font-size: var(--h3-size); display: flex; gap: 0.5em;"><span class="text-clay" style="font-weight: 700;">6.</span> Discoverable detail</li>
+        <li style="font-size: var(--h3-size); display: flex; gap: 0.5em;"><span class="text-clay" style="font-weight: 700;">7.</span> Painterly language</li>
+      </ol>
+    </div>
+    <div class="reveal" style="transition-delay: 0.2s; flex: 0 0 clamp(180px, 22vw, 320px); align-self: stretch; display: flex; flex-direction: column; justify-content: center; gap: clamp(0.4rem, 0.8vh, 0.6rem); padding: clamp(1rem, 2vh, 1.5rem) clamp(0.3rem, 0.5vw, 0.5rem);">
+      <h3 style="font-size: var(--body-size); color: var(--gold); text-align: center; margin-bottom: clamp(0.1rem, 0.3vh, 0.2rem);">5 Style Categories</h3>
+      <div style="text-align: center;">
+        <img src="https://cdn.sixlines.online/yilin-inkbrush/52-39.webp" alt="atmospheric-night" style="width: 100%; max-height: min(19vh, 155px); object-fit: cover; border-radius: clamp(3px, 0.4vw, 6px);">
+        <p style="font-size: var(--small-size); color: var(--muted); margin-top: 0.15em;"><span style="display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #2a2a3a; vertical-align: middle; margin-right: 4px;"></span>atmospheric-night</p>
+      </div>
+      <div style="text-align: center;">
+        <img src="https://cdn.sixlines.online/yilin-inkbrush/47-29.webp" alt="ink-landscape" style="width: 100%; max-height: min(19vh, 155px); object-fit: cover; border-radius: clamp(3px, 0.4vw, 6px);">
+        <p style="font-size: var(--small-size); color: var(--muted); margin-top: 0.15em;"><span style="display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #5a7a5a; vertical-align: middle; margin-right: 4px;"></span>ink-landscape</p>
+      </div>
+      <div style="text-align: center;">
+        <img src="https://cdn.sixlines.online/yilin-inkbrush/3-20.webp" alt="figures-in-mist" style="width: 100%; max-height: min(19vh, 155px); object-fit: cover; border-radius: clamp(3px, 0.4vw, 6px);">
+        <p style="font-size: var(--small-size); color: var(--muted); margin-top: 0.15em;"><span style="display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #8a7aa0; vertical-align: middle; margin-right: 4px;"></span>figures-in-mist</p>
+      </div>
+    </div>
+    <div class="reveal" style="transition-delay: 0.3s; flex: 0 0 clamp(180px, 22vw, 320px); align-self: stretch; display: flex; flex-direction: column; justify-content: center; gap: clamp(0.4rem, 0.8vh, 0.6rem); padding: clamp(1rem, 2vh, 1.5rem) clamp(0.3rem, 0.5vw, 0.5rem);">
+      <div style="height: clamp(1rem, 2.5vh, 2rem);"></div>
+      <div style="text-align: center;">
+        <img src="https://cdn.sixlines.online/yilin-inkbrush/29-7.webp" alt="bold-action" style="width: 100%; max-height: min(19vh, 155px); object-fit: cover; border-radius: clamp(3px, 0.4vw, 6px);">
+        <p style="font-size: var(--small-size); color: var(--muted); margin-top: 0.15em;"><span style="display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #b87a3a; vertical-align: middle; margin-right: 4px;"></span>bold-action</p>
+      </div>
+      <div style="text-align: center;">
+        <img src="https://cdn.sixlines.online/yilin-inkbrush/1-14.webp" alt="cosmic-night" style="width: 100%; max-height: min(19vh, 155px); object-fit: cover; border-radius: clamp(3px, 0.4vw, 6px);">
+        <p style="font-size: var(--small-size); color: var(--muted); margin-top: 0.15em;"><span style="display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #1a2a4a; vertical-align: middle; margin-right: 4px;"></span>cosmic-night</p>
+      </div>
+      <p class="text-muted" style="font-size: var(--small-size); text-align: center; margin-top: clamp(0.3rem, 0.8vh, 0.5rem);">AI reads verse tone &rarr; selects palette</p>
+    </div>
+  </div>
+  <div class="slide-number"></div>
+</section>
+
+
+<!-- Results: 5 gallery slides — image left, verse right -->
+<section class="slide">
+  <div class="slide-content" style="flex-direction: row; padding: 0; gap: 0; max-height: none; background: #1a1a1a;">
+    <div style="flex: 0 0 auto; align-self: stretch; display: flex; align-items: center; justify-content: center;">
+      <img src="https://cdn.sixlines.online/yilin-inkbrush/21-27.webp" alt="atmospheric-night — 21-27" style="height: 100vh; max-height: none; max-width: none; object-fit: cover; display: block;">
+    </div>
+    <div style="flex: 1; display: flex; flex-direction: column; justify-content: center; padding: clamp(2rem, 4vw, 4rem); gap: 1.5em;">
+      <div style="display: flex; align-items: center; gap: 0.6em;">
+        <span style="display: inline-block; width: 14px; height: 14px; border-radius: 50%; background: #2a2a3a; border: 2px solid rgba(255,255,255,0.3);"></span>
+        <span style="font-size: var(--h2-size); color: rgba(255,255,255,0.85); font-family: var(--font-display); font-weight: 600;">atmospheric-night</span>
+      </div>
+      <p style="font-size: clamp(1.4rem, 3vw, 2.2rem); color: rgba(255,255,255,0.9); font-family: var(--font-cjk); line-height: 1.8; margin: 0;">明滅光息，不能復食<br>精魄既喪，以夜為室</p>
+      <p style="font-size: var(--body-size); color: rgba(255,255,255,0.5); margin: 0; font-style: italic;">Light dims, radiance dies. Night becomes one's dwelling.</p>
+      <span style="font-size: var(--small-size); color: rgba(255,255,255,0.25); font-family: var(--font-mono);">噬嗑 → 頤 &middot; hexagram 21 → 27</span>
+    </div>
+  </div>
+  <div class="slide-number"></div>
+</section>
+
+<section class="slide">
+  <div class="slide-content" style="flex-direction: row; padding: 0; gap: 0; max-height: none; background: #1a1a1a;">
+    <div style="flex: 0 0 auto; align-self: stretch; display: flex; align-items: center; justify-content: center;">
+      <img src="https://cdn.sixlines.online/yilin-inkbrush/1-16.webp" alt="ink-landscape — 1-16" style="height: 100vh; max-height: none; max-width: none; object-fit: cover; display: block;">
+    </div>
+    <div style="flex: 1; display: flex; flex-direction: column; justify-content: center; padding: clamp(2rem, 4vw, 4rem); gap: 1.5em;">
+      <div style="display: flex; align-items: center; gap: 0.6em;">
+        <span style="display: inline-block; width: 14px; height: 14px; border-radius: 50%; background: #5a7a5a; border: 2px solid rgba(255,255,255,0.3);"></span>
+        <span style="font-size: var(--h2-size); color: rgba(255,255,255,0.85); font-family: var(--font-display); font-weight: 600;">ink-landscape</span>
+      </div>
+      <p style="font-size: clamp(1.4rem, 3vw, 2.2rem); color: rgba(255,255,255,0.9); font-family: var(--font-cjk); line-height: 1.8; margin: 0;">禹鑿龍門，通利水源<br>東注滄海，民得安存</p>
+      <p style="font-size: var(--body-size); color: rgba(255,255,255,0.5); margin: 0; font-style: italic;">Yu carved Dragon Gate and opened the water's source.<br>Flowing east to the vast sea, the people found safe dwelling.</p>
+      <span style="font-size: var(--small-size); color: rgba(255,255,255,0.25); font-family: var(--font-mono);">乾 → 豫 &middot; hexagram 1 → 16</span>
+    </div>
+  </div>
+  <div class="slide-number"></div>
+</section>
+
+<section class="slide">
+  <div class="slide-content" style="flex-direction: row; padding: 0; gap: 0; max-height: none; background: #1a1a1a;">
+    <div style="flex: 0 0 auto; align-self: stretch; display: flex; align-items: center; justify-content: center;">
+      <img src="https://cdn.sixlines.online/yilin-inkbrush/41-42.webp" alt="figures-in-mist — 41-42" style="height: 100vh; max-height: none; max-width: none; object-fit: cover; display: block;">
+    </div>
+    <div style="flex: 1; display: flex; flex-direction: column; justify-content: center; padding: clamp(2rem, 4vw, 4rem); gap: 1.5em;">
+      <div style="display: flex; align-items: center; gap: 0.6em;">
+        <span style="display: inline-block; width: 14px; height: 14px; border-radius: 50%; background: #8a7aa0; border: 2px solid rgba(255,255,255,0.3);"></span>
+        <span style="font-size: var(--h2-size); color: rgba(255,255,255,0.85); font-family: var(--font-display); font-weight: 600;">figures-in-mist</span>
+      </div>
+      <p style="font-size: clamp(1.4rem, 3vw, 2.2rem); color: rgba(255,255,255,0.9); font-family: var(--font-cjk); line-height: 1.8; margin: 0;">雨師娶婦，黃岩季子<br>成禮既婚，相呼面南</p>
+      <p style="font-size: var(--body-size); color: rgba(255,255,255,0.5); margin: 0; font-style: italic;">The Rain Master takes a bride. Rites completed, they face south.<br>Timely rain; a bountiful year, great rejoicing.</p>
+      <span style="font-size: var(--small-size); color: rgba(255,255,255,0.25); font-family: var(--font-mono);">損 → 益 &middot; hexagram 41 → 42</span>
+    </div>
+  </div>
+  <div class="slide-number"></div>
+</section>
+
+<section class="slide">
+  <div class="slide-content" style="flex-direction: row; padding: 0; gap: 0; max-height: none; background: #1a1a1a;">
+    <div style="flex: 0 0 auto; align-self: stretch; display: flex; align-items: center; justify-content: center;">
+      <img src="https://cdn.sixlines.online/yilin-inkbrush/42-8.webp" alt="bold-action — 42-8" style="height: 100vh; max-height: none; max-width: none; object-fit: cover; display: block;">
+    </div>
+    <div style="flex: 1; display: flex; flex-direction: column; justify-content: center; padding: clamp(2rem, 4vw, 4rem); gap: 1.5em;">
+      <div style="display: flex; align-items: center; gap: 0.6em;">
+        <span style="display: inline-block; width: 14px; height: 14px; border-radius: 50%; background: #b87a3a; border: 2px solid rgba(255,255,255,0.3);"></span>
+        <span style="font-size: var(--h2-size); color: rgba(255,255,255,0.85); font-family: var(--font-display); font-weight: 600;">bold-action</span>
+      </div>
+      <p style="font-size: clamp(1.4rem, 3vw, 2.2rem); color: rgba(255,255,255,0.9); font-family: var(--font-cjk); line-height: 1.8; margin: 0;">白龍黑虎，起伏俱怒<br>蚩尤敗走，死於魯首</p>
+      <p style="font-size: var(--body-size); color: rgba(255,255,255,0.5); margin: 0; font-style: italic;">White dragon and black tiger rise in shared fury.<br>Chi You flees in defeat, slain at Lu Shou.</p>
+      <span style="font-size: var(--small-size); color: rgba(255,255,255,0.25); font-family: var(--font-mono);">益 → 比 &middot; hexagram 42 → 8</span>
+    </div>
+  </div>
+  <div class="slide-number"></div>
+</section>
+
+<section class="slide">
+  <div class="slide-content" style="flex-direction: row; padding: 0; gap: 0; max-height: none; background: #1a1a1a;">
+    <div style="flex: 0 0 auto; align-self: stretch; display: flex; align-items: center; justify-content: center;">
+      <img src="https://cdn.sixlines.online/yilin-inkbrush/64-54.webp" alt="cosmic-night — 64-54" style="height: 100vh; max-height: none; max-width: none; object-fit: cover; display: block;">
+    </div>
+    <div style="flex: 1; display: flex; flex-direction: column; justify-content: center; padding: clamp(2rem, 4vw, 4rem); gap: 1.5em;">
+      <div style="display: flex; align-items: center; gap: 0.6em;">
+        <span style="display: inline-block; width: 14px; height: 14px; border-radius: 50%; background: #1a2a4a; border: 2px solid rgba(255,255,255,0.3);"></span>
+        <span style="font-size: var(--h2-size); color: rgba(255,255,255,0.85); font-family: var(--font-display); font-weight: 600;">cosmic-night</span>
+      </div>
+      <p style="font-size: clamp(1.4rem, 3vw, 2.2rem); color: rgba(255,255,255,0.9); font-family: var(--font-cjk); line-height: 1.8; margin: 0;">龍生馬淵，壽考且神<br>飛騰上天，舍宿軒轅</p>
+      <p style="font-size: var(--body-size); color: rgba(255,255,255,0.5); margin: 0; font-style: italic;">The dragon born in the deep pool, long-lived and divine.<br>Flying upward to heaven, dwelling among the stars of Xuanyuan.</p>
+      <span style="font-size: var(--small-size); color: rgba(255,255,255,0.25); font-family: var(--font-mono);">未濟 → 歸妹 &middot; hexagram 64 → 54</span>
+    </div>
+  </div>
+  <div class="slide-number"></div>
+</section>
+
+<section class="slide">
+  <div class="paper-texture"></div>
+  <div class="ink-wash-tr"></div>
+  <div class="accent-bar"></div>
+  <div class="slide-content centered">
+    <h2 class="reveal">Four Rounds to a Skill</h2>
+    <p class="reveal text-muted" style="margin-bottom: clamp(0.5rem, 1.5vh, 1rem);">Each round encoded more taste:</p>
+    <div class="timeline reveal-scale" style="transition-delay: 0.2s;">
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-label">Round 1</div>
+        <div class="timeline-desc">Style as suffix</div>
+        <div class="timeline-desc" style="font-style: italic;">Failed — flat, lifeless</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-label">Round 2</div>
+        <div class="timeline-desc">Try different styles</div>
+        <div class="timeline-desc" style="font-style: italic;">Failed — wrong medium</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-label">Round 3</div>
+        <div class="timeline-desc">Language as style</div>
+        <div class="timeline-desc" style="font-style: italic;">Breakthrough!</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-label">Round 4</div>
+        <div class="timeline-desc">Encode &amp; scale</div>
+        <div class="timeline-desc" style="font-style: italic;">4,096 images</div>
+      </div>
+    </div>
+    <p class="reveal text-muted" style="font-size: var(--small-size); margin-top: clamp(0.8rem, 2vh, 1.2rem); max-width: 700px;">52 of 4,096 hit content safety filters — the skill encodes substitution patterns: atmosphere and aftermath, never the act. <span class="text-clay">The constraint forced better art.</span></p>
+    <div class="reveal" style="display: flex; gap: clamp(1.5rem, 4vw, 4rem); justify-content: center; margin-top: clamp(0.8rem, 2vh, 1.2rem); flex-wrap: wrap;">
+      <div style="text-align: center;">
+        <div class="stat-number" style="font-size: clamp(1.5rem, 3vw, 2.5rem);">5</div>
+        <div class="stat-label">style categories</div>
+      </div>
+      <div style="text-align: center;">
+        <div class="stat-number" style="font-size: clamp(1.5rem, 3vw, 2.5rem);">7</div>
+        <div class="stat-label">composition rules</div>
+      </div>
+      <div style="text-align: center;">
+        <div class="stat-number" style="font-size: clamp(1.5rem, 3vw, 2.5rem);">8</div>
+        <div class="stat-label">reference prompts</div>
+      </div>
+      <div style="text-align: center;">
+        <div class="stat-number" style="font-size: clamp(1.5rem, 3vw, 2.5rem);">7</div>
+        <div class="stat-label">safety patterns</div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-number"></div>
+</section>
+
+<section class="slide">
+  <div class="paper-texture"></div>
+  <div class="accent-bar"></div>
+  <div class="slide-content">
+    <h2 class="reveal" style="margin-bottom: clamp(0.3rem, 0.8vh, 0.5rem);">Abstract Verses? The Skill Handles It.</h2>
+    <p class="reveal text-muted" style="margin-bottom: clamp(0.3rem, 0.8vh, 0.6rem);">31% of verses have no concrete imagery. Here's how the skill turns abstract fortune into a painting:</p>
+    <div class="two-col reveal" style="transition-delay: 0.2s; align-items: flex-start;">
+      <div style="display: flex; flex-direction: column; align-items: center; gap: clamp(0.4rem, 1vh, 0.7rem);">
+        <div style="border-left: 3px solid var(--clay); padding-left: clamp(0.6rem, 1vw, 1rem); align-self: stretch;">
+          <p style="font-size: var(--small-size); font-weight: 600; color: var(--clay); margin-bottom: 0.2em;">Verse (input)</p>
+          <p class="font-cjk" style="font-size: var(--body-size); line-height: 1.7; margin-bottom: 0.2em;">元吉无咎，安寧不殆</p>
+          <p class="text-muted" style="font-size: var(--small-size); font-style: italic;">比 &rarr; 明夷 &middot; "Great fortune, no blame. Peace without peril."</p>
+        </div>
+        <img src="https://cdn.sixlines.online/yilin-inkbrush/8-36.webp" alt="8-36: Mountain temple — golden-hour" style="width: 100%; border-radius: clamp(6px, 0.8vw, 12px); box-shadow: 0 4px 20px rgba(0,0,0,0.1); max-height: min(42vh, 340px); object-fit: cover;">
+        <p class="text-muted" style="font-size: var(--small-size);">key 8-36 &middot; ink-landscape &middot; 52 words</p>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: clamp(0.5rem, 1.2vh, 0.8rem);">
+        <div style="border-left: 3px solid var(--gold); padding-left: clamp(0.6rem, 1vw, 1rem);">
+          <p style="font-size: var(--small-size); font-weight: 600; color: var(--gold); margin-bottom: 0.3em;">What the skill tells the agent</p>
+          <div class="code-block" style="font-size: clamp(0.7rem, 1.2vw, 0.95rem); padding: clamp(0.3rem, 0.8vw, 0.6rem); line-height: 1.5;"><span class="comment"># Style table fallback for abstract verses:</span>
+If abstract, choose by <span class="accent">tone</span>:
+  ominous  &rarr; atmospheric-night
+  <span class="accent">auspicious &rarr; ink-landscape</span>
+  mixed    &rarr; bold-action
+
+<span class="comment"># Composition rules still apply:</span>
+1. <span class="accent">Frame the scene</span> &mdash; gates, gorges, walls
+2. <span class="accent">Force depth</span> &mdash; foreground/mid/background
+4. <span class="accent">Warm accent</span> &mdash; amber, vermilion, gold</div>
+        </div>
+        <div style="background: var(--clay-light); border-radius: clamp(4px, 0.5vw, 8px); padding: clamp(0.5rem, 1vw, 0.8rem);">
+          <p style="font-size: var(--small-size); font-weight: 600; color: var(--clay); margin-bottom: 0.3em;">Agent output</p>
+          <p style="font-size: var(--small-size); line-height: 1.5;">Tone: serene, auspicious &rarr; <strong>ink-landscape</strong><br>Frame: valley at sunset, stone steps through a temple gate<br>Depth: worn steps (fg) &rarr; wanderer on path (mid) &rarr; hazy peaks (bg)<br>Accent: golden-hour light on the gate</p>
+        </div>
+        <p class="text-muted" style="font-size: var(--small-size);">The rules forced the agent to invent concrete visual elements — even when the verse gave it nothing to paint.</p>
+      </div>
+    </div>
+  </div>
+  <div class="slide-number"></div>
+</section>
+
+
+<section class="slide">
+  <div class="paper-texture"></div>
+  <div class="accent-bar"></div>
+  <div class="slide-content">
+    <h2 class="reveal">What Is a Skill?</h2>
+    <p class="reveal" style="margin-bottom: clamp(0.5rem, 1.5vh, 1rem);">A <strong>SKILL.md</strong> file with YAML frontmatter + instructions. No runtime code — pure prompt engineering that encodes domain expertise.</p>
+    <div class="code-block reveal" style="transition-delay: 0.3s; max-width: 700px;">---
+name: verse-to-prompt
+description: Convert classical Chinese verse into image prompts
+user-invocable: true
+argument-hint: [paste your verse here]
+---
+
+# Verse &rarr; Image Prompt
+
+Given a verse, produce:
+1. A <span class="accent">style classification</span> with rationale
+2. A <span class="accent">50-60 word English prompt</span> ending "Chinese ink painting."
+3. A <span class="accent">faithful English translation</span>
+
+## The 7 Composition Rules (MANDATORY)
+...</div>
+    <p class="reveal text-muted" style="font-size: var(--small-size); margin-top: clamp(0.3rem, 0.8vh, 0.5rem); transition-delay: 0.4s;">A skill carries pre-tested expertise. The agent doesn't rediscover — it inherits.</p>
+  </div>
+  <div class="slide-number"></div>
+</section>
+
+<section class="slide">
+  <div class="paper-texture"></div>
+  <div class="accent-bar"></div>
+  <div class="slide-content">
+    <h2 class="reveal">Plugins vs Skills</h2>
+    <div class="two-col" style="margin-top: clamp(0.3rem, 1vh, 0.5rem);">
+      <div class="reveal-left" style="transition-delay: 0.2s; border: 1px solid var(--border); border-radius: clamp(4px, 0.5vw, 8px); padding: clamp(0.8rem, 1.5vw, 1.2rem); background: var(--tone);">
+        <h3 style="margin-bottom: clamp(0.3rem, 0.8vh, 0.5rem);"><span class="text-clay">Plugin</span> = Package</h3>
+        <ul style="list-style: none; display: flex; flex-direction: column; gap: clamp(0.2rem, 0.5vh, 0.4rem);">
+          <li style="font-size: var(--body-size);">&#9632; A Git repository with a manifest</li>
+          <li style="font-size: var(--body-size);">&#9632; Contains 1+ skills, agents, hooks</li>
+          <li style="font-size: var(--body-size);">&#9632; Installed via <span class="font-mono">/plugin install</span></li>
+          <li style="font-size: var(--body-size);">&#9632; Versioned, shareable, discoverable</li>
+        </ul>
+        <div class="code-block" style="margin-top: clamp(0.3rem, 0.8vh, 0.5rem); font-size: var(--code-size);">.claude-plugin/
+  plugin.json    <span class="comment"># manifest</span>
+skills/
+  verse-to-prompt/SKILL.md
+  blakean-scene/SKILL.md
+  ...</div>
+      </div>
+      <div class="reveal" style="transition-delay: 0.3s; border: 1px solid var(--border); border-radius: clamp(4px, 0.5vw, 8px); padding: clamp(0.8rem, 1.5vw, 1.2rem);">
+        <h3 style="margin-bottom: clamp(0.3rem, 0.8vh, 0.5rem);">Skill = Behavior</h3>
+        <ul style="list-style: none; display: flex; flex-direction: column; gap: clamp(0.2rem, 0.5vh, 0.4rem);">
+          <li style="font-size: var(--body-size);">&#9632; A single SKILL.md file</li>
+          <li style="font-size: var(--body-size);">&#9632; Defines one specific capability</li>
+          <li style="font-size: var(--body-size);">&#9632; Invoked via <span class="font-mono">/skill-name</span></li>
+          <li style="font-size: var(--body-size);">&#9632; No code — instructions only</li>
+        </ul>
+        <div class="code-block" style="margin-top: clamp(0.3rem, 0.8vh, 0.5rem); font-size: var(--code-size);"><span class="comment"># Usage:</span>
+/verse-to-prompt 白駒食場，一躍而去。
+
+<span class="accent">Style:</span> ink-landscape
+<span class="accent">Prompt:</span> A white colt grazes in a
+walled courtyard...</div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-number"></div>
+</section>
+
+<section class="slide">
+  <div class="paper-texture"></div>
+  <div class="accent-bar"></div>
+  <div class="slide-content">
+    <h2 class="reveal">The Inkstone Plugin &middot; <span class="font-cjk">硯台</span></h2>
+    <p class="reveal text-muted" style="font-size: var(--small-size); margin-bottom: clamp(0.5rem, 1.5vh, 1rem);">Skills spanning creative, design, and productivity workflows</p>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr)); gap: clamp(0.4rem, 0.8vw, 0.6rem);">
+      <div class="skill-card reveal"><h4>verse-to-prompt</h4><p>Classical verse &rarr; ink painting prompts (7 rules, 5 styles)</p></div>
+      <div class="skill-card reveal"><h4>image-to-scene</h4><p>Ink paintings &rarr; video motion prompts (Seedance 2.0)</p></div>
+      <div class="skill-card reveal"><h4>create-explanation</h4><p>Bilingual scholarly explanations of oracular verse</p></div>
+      <div class="skill-card reveal"><h4>blakean-scene</h4><p>Abstract concepts &rarr; 240-word Blakean embodied scenes</p></div>
+      <div class="skill-card reveal"><h4>ui-ux-architect</h4><p>Design audit &middot; 13 dimensions &middot; Jobs/Ive philosophy</p></div>
+      <div class="skill-card reveal"><h4>media-kit</h4><p>Speaker bio writing, photo processing, page generation</p></div>
+    </div>
+    <div class="reveal" style="margin-top: clamp(0.4rem, 1vh, 0.6rem); display: flex; flex-direction: column; gap: clamp(0.25rem, 0.6vh, 0.4rem); max-width: 820px;">
+      <p style="font-size: var(--small-size);"><strong>Claude Code:</strong> <span class="font-mono">/plugin marketplace add augchan42/inkstone</span></p>
+      <p style="font-size: var(--small-size);"><strong>GitHub:</strong> <span class="text-clay">github.com/augchan42/inkstone</span></p>
+      <p class="text-muted" style="font-size: var(--small-size);"><strong>Cursor:</strong> Same skills in Agent chat &mdash; ask naturally (e.g. <span class="font-mono">&quot;use verse-to-prompt on &hellip;&quot;</span>) or copy to <span class="font-mono">.cursor/skills/</span>. No <span class="font-mono">/plugin</span> commands.</p>
+      <p class="text-muted" style="font-size: var(--small-size);"><strong>opencode:</strong> spec-packaged &mdash; worth trying <span class="font-mono">npx skills add augchan42/inkstone</span> (opencode ran this on its own to pull the skills).</p>
+    </div>
+  </div>
+  <div class="slide-number"></div>
+</section>
+
+
+<section class="slide" style="background: #f0ebe1 url('black-box-diagram.webp') center / contain no-repeat;">
+  <div class="slide-number"></div>
+</section>
+
+<section class="slide">
+  <div class="paper-texture"></div>
+  <div class="ink-wash-tr"></div>
+  <div class="ink-wash-bl"></div>
+  <div class="accent-bar"></div>
+  <div class="slide-content centered">
+    <h2 class="reveal">Takeaways</h2>
+    <div style="max-width: 700px; text-align: left; margin: 0 auto; display: flex; flex-direction: column; gap: clamp(0.6rem, 1.5vh, 1.2rem);">
+      <div class="reveal" style="border-left: 3px solid var(--clay); padding-left: clamp(0.6rem, 1vw, 1rem);">
+        <h3>Taste is iterative, not declarative</h3>
+        <p class="text-muted" style="font-size: var(--small-size);">You can't define good output upfront. It emerges through cycles of human judgment and AI analysis.</p>
+      </div>
+      <div class="reveal" style="border-left: 3px solid var(--gold); padding-left: clamp(0.6rem, 1vw, 1rem);">
+        <h3>Show, don't tell</h3>
+        <p class="text-muted" style="font-size: var(--small-size);">Examples teach more than abstract rules.</p>
+      </div>
+      <div class="reveal" style="border-left: 3px solid var(--muted); padding-left: clamp(0.6rem, 1vw, 1rem);">
+        <h3>Humans have taste; AI extracts patterns</h3>
+        <p class="text-muted" style="font-size: var(--small-size);">You judge output. The AI figures out why it works and encodes the rules.</p>
+      </div>
+      <div class="reveal" style="border-left: 3px solid var(--border); padding-left: clamp(0.6rem, 1vw, 1rem);">
+        <h3>Skills encode the loop's output</h3>
+        <p class="text-muted" style="font-size: var(--small-size);">A skill is distilled taste — the final artifact of an iterative collaboration between human and AI.</p>
+      </div>
+    </div>
+  </div>
+  <div class="slide-number"></div>
+</section>
+
+<section class="slide">
+  <div class="paper-texture"></div>
+  <div class="accent-bar"></div>
+  <div class="slide-content centered">
+    <h2 class="reveal">Beyond Claude Code</h2>
+    <p class="reveal text-muted" style="margin-bottom: clamp(1rem, 2.5vh, 2rem);">The idea is spreading. Several tools already support structured agent instructions:</p>
+    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(1rem, 2vw, 2rem); width: 100%;">
+      <div class="reveal" style="background: var(--tone); border-radius: clamp(6px, 0.8vw, 12px); padding: clamp(1rem, 2vh, 1.5rem) clamp(1rem, 1.5vw, 1.5rem); border-top: 3px solid var(--clay);">
+        <h3 style="font-size: var(--h3-size); margin-bottom: 0.4em;">GitHub Copilot</h3>
+        <p style="font-size: var(--body-size); line-height: 1.5;">Agent mode reads SKILL.md from <span class="font-mono">.github/skills/</span> or <span class="font-mono">.agents/skills/</span></p>
+        <p class="text-muted" style="font-size: var(--small-size); margin-top: 0.6em;">VS Code &middot; CLI &middot; cloud agent</p>
+      </div>
+      <div class="reveal" style="background: var(--tone); border-radius: clamp(6px, 0.8vw, 12px); padding: clamp(1rem, 2vh, 1.5rem) clamp(1rem, 1.5vw, 1.5rem); border-top: 3px solid var(--gold);">
+        <h3 style="font-size: var(--h3-size); margin-bottom: 0.4em;">OpenCode</h3>
+        <p style="font-size: var(--body-size); line-height: 1.5;">Auto-discovers skills by scanning the <span class="font-mono">skills/</span> folder against the Agent Skills spec; reads <span class="font-mono">AGENTS.md</span> for project context</p>
+        <p class="text-muted" style="font-size: var(--small-size); margin-top: 0.6em;">Open source &middot; see Jules' talk today!</p>
+      </div>
+      <div class="reveal" style="background: var(--tone); border-radius: clamp(6px, 0.8vw, 12px); padding: clamp(1rem, 2vh, 1.5rem) clamp(1rem, 1.5vw, 1.5rem); border-top: 3px solid var(--border);">
+        <h3 style="font-size: var(--h3-size); margin-bottom: 0.4em;">Cursor</h3>
+        <p style="font-size: var(--body-size); line-height: 1.5;">Copy SKILL.md into <span class="font-mono">.cursor/skills/</span> &mdash; or just ask naturally in chat</p>
+        <p class="text-muted" style="font-size: var(--small-size); margin-top: 0.6em;">No /plugin commands needed</p>
+      </div>
+    </div>
+    <p class="reveal" style="font-size: var(--body-size); margin-top: clamp(1rem, 2.5vh, 2rem); color: var(--clay); font-weight: 600;">Encode domain expertise into structured documents that agents consume at runtime.</p>
+  </div>
+  <div class="slide-number"></div>
+</section>
+
+<section class="slide">
+  <div class="paper-texture"></div>
+  <div class="ink-wash-tr"></div>
+  <div class="accent-bar"></div>
+  <div class="slide-content centered">
+    <h2 class="reveal">Support HKOSCON</h2>
+    <p class="reveal text-muted" style="max-width: 820px; margin-bottom: clamp(1rem, 2.5vh, 2rem);">This conference runs on the open-source community. If today's talks brought you value, become a patron — every contribution keeps HKOSCON free, independent, and volunteer-run.</p>
+    <div class="reveal" style="display: flex; align-items: center; justify-content: center; gap: clamp(2rem, 5vw, 4rem); flex-wrap: wrap;">
+      <div style="text-align: left; max-width: 460px;">
+        <p style="font-size: var(--h3-size); color: var(--clay); font-weight: 600; margin-bottom: 0.4em;">Become a Patron</p>
+        <p style="font-size: var(--body-size); line-height: 1.6;">Sponsor speakers, venues, and travel grants. Keep the open-source movement in Hong Kong thriving.</p>
+        <p style="font-size: var(--h3-size); margin-top: clamp(0.6rem, 1.5vh, 1rem); font-weight: 600;"><span class="text-clay">hkoscon.org/2026/patron</span></p>
+      </div>
+      <div style="text-align: center; flex-shrink: 0;">
+        <img src="qr-patron.png" alt="HKOSCON Patron QR" style="width: clamp(160px, 20vw, 260px); border-radius: clamp(6px, 0.8vw, 12px);">
+        <p style="font-size: var(--small-size); color: var(--muted); margin-top: 0.5em;">Donate &middot; hkoscon.org/2026/patron</p>
+      </div>
+    </div>
+  </div>
+  <div class="slide-number"></div>
+</section>
+
+<section class="slide podcast-slide">
+  <div class="slide-content">
+    <div class="podcast-card">
+      <div class="reveal-scale">
+        <img src="podcast-art.webp" alt="Hong Kong AI Podcast artwork" class="podcast-art">
+      </div>
+      <div class="podcast-info">
+        <div class="reveal" style="transition-delay: 0.15s;">
+          <p class="podcast-title">Hong Kong<br>AI Podcast</p>
+          <p class="podcast-tagline">Real conversations with Hong Kong's AI practitioners — research, fintech, robotics, culture.</p>
+          <p class="podcast-url">hongkongaipodcast.com</p>
+        </div>
+      </div>
+      <div class="reveal" style="transition-delay: 0.3s; text-align: center; flex-shrink: 0;">
+        <img src="qr-podcast.png" alt="Podcast QR" style="width: clamp(160px, 20vw, 260px); border-radius: clamp(6px, 0.8vw, 12px); background: #fff; padding: clamp(6px, 0.8vw, 12px);">
+        <p style="font-size: var(--body-size); color: #8a7a5c; margin-top: 0.5em; font-weight: 500;">Listen now</p>
+      </div>
+    </div>
+  </div>
+  <div class="slide-number"></div>
+</section>
+
+<section class="slide title-slide">
+  <div class="paper-texture"></div>
+  <div class="ink-wash-tr"></div>
+  <div class="ink-wash-bl"></div>
+  <div class="slide-content">
+    <div class="seal-mark reveal-stamp" style="margin-bottom: clamp(1rem, 3vh, 2rem);">硯台</div>
+    <h1 class="reveal" style="font-size: clamp(2rem, 5vw, 4rem);">多謝 &middot; Thank You</h1>
+    <p class="reveal font-italic" style="font-family: var(--font-display); font-size: var(--h3-size); color: var(--muted); max-width: 840px; line-height: 1.5; margin-top: clamp(0.3rem, 0.8vh, 0.6rem);">The kid who wouldn't learn Chinese taught a machine to paint 4,096 verses of an ancient classic.</p>
+    <p class="reveal" style="font-size: var(--h3-size); color: var(--clay); font-weight: 600; margin-top: clamp(0.3rem, 0.8vh, 0.6rem);">Questions?</p>
+    <div class="divider reveal"></div>
+    <div class="reveal" style="display: flex; align-items: center; justify-content: space-between; width: 100%; max-width: 1000px;">
+      <div style="text-align: center; flex-shrink: 0;">
+        <img src="qr-slides.png" alt="Slides QR" style="width: clamp(100px, 14vw, 180px); border-radius: clamp(4px, 0.5vw, 8px);">
+        <p style="font-size: var(--small-size); color: var(--muted); margin-top: 0.4em;">These slides</p>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: clamp(0.3rem, 0.6vh, 0.5rem); font-size: var(--body-size); text-align: center;">
+        <p><strong>App:</strong> <span class="text-clay">sixlines.online</span> <svg style="display:inline-block;vertical-align:-0.1em;width:0.75em;height:0.75em;" viewBox="0 0 384 512" fill="currentColor"><path d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5c0 26.2 4.8 53.3 14.4 81.2 12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zm-56.6-164.2c27.3-32.4 24.8-61.9 24-72.5-24.1 1.4-52 16.4-67.9 34.9-17.5 19.8-27.8 44.3-25.6 71.9 26.1 2 49.9-11.4 69.5-34.3z"/></svg> <svg style="display:inline-block;vertical-align:-0.1em;width:0.75em;height:0.75em;" viewBox="0 0 576 512" fill="currentColor"><path d="M420.55 301.93a24 24 0 1 1 24-24 24 24 0 0 1-24 24m-265.1 0a24 24 0 1 1 24-24 24 24 0 0 1-24 24m273.7-144.48l47.94-83a10 10 0 1 0-17.27-10l-48.54 84.07a301 301 0 0 0-246.56 0L116.18 64.45a10 10 0 1 0-17.27 10l47.94 83C64.53 202.22 8.24 285.55 0 384h576c-8.24-98.45-64.54-181.78-146.85-226.55"/></svg></p>
+        <p><strong>Plugin:</strong> <span class="text-clay">github.com/augchan42/inkstone</span></p>
+        <p><strong>Blog:</strong> <span class="text-clay">augustinchan.dev</span></p>
+        <p><strong>X:</strong> <span class="text-clay">@aug_digitalrain</span></p>
+        <p class="text-muted" style="font-size: var(--small-size);">aug@digitalrain.studio</p>
+      </div>
+      <div style="text-align: center; flex-shrink: 0;">
+        <img src="qr-linkedin.png" alt="LinkedIn QR" style="width: clamp(100px, 14vw, 180px); border-radius: clamp(4px, 0.5vw, 8px);">
+        <p style="font-size: var(--small-size); color: var(--muted); margin-top: 0.4em;">LinkedIn</p>
+      </div>
+    </div>
+  </div>
+  <div class="slide-number"></div>
+</section>
+
+<script>
+/* === SLIDE PRESENTATION CONTROLLER === */
+class SlidePresentation {
+  constructor() {
+    this.slides = document.querySelectorAll('.slide');
+    this.currentSlide = 0;
+    this.isScrolling = false;
+    this.progressBar = document.getElementById('progressBar');
+    this.navDotsContainer = document.getElementById('navDots');
+
+    this.setupSlideNumbers();
+    this.setupIntersectionObserver();
+    this.setupKeyboardNav();
+    this.setupTouchNav();
+    this.setupWheelNav();
+    this.setupProgressBar();
+    this.setupNavDots();
+
+    this.slides[0].classList.add('visible');
+  }
+
+  setupSlideNumbers() {
+    this.slides.forEach((slide, i) => {
+      slide.setAttribute('data-slide', i);
+      const numEl = slide.querySelector('.slide-number');
+      if (numEl && !numEl.dataset.fixed) {
+        numEl.textContent = String(i + 1).padStart(2, '0');
+      }
+    });
+  }
+
+  setupIntersectionObserver() {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          const idx = Array.from(this.slides).indexOf(entry.target);
+          if (idx >= 0) {
+            this.currentSlide = idx;
+            this.updateProgressBar();
+            this.updateNavDots();
+          }
+        }
+      });
+    }, { threshold: 0.5 });
+
+    this.slides.forEach(slide => observer.observe(slide));
+  }
+
+  setupKeyboardNav() {
+    document.addEventListener('keydown', (e) => {
+      if (e.target.getAttribute('contenteditable')) return;
+      switch(e.key) {
+        case 'ArrowDown': case 'ArrowRight': case ' ': case 'PageDown':
+          e.preventDefault(); this.goToSlide(this.currentSlide + 1); break;
+        case 'ArrowUp': case 'ArrowLeft': case 'PageUp':
+          e.preventDefault(); this.goToSlide(this.currentSlide - 1); break;
+        case 'Home': e.preventDefault(); this.goToSlide(0); break;
+        case 'End': e.preventDefault(); this.goToSlide(this.slides.length - 1); break;
+      }
+    });
+  }
+
+  setupTouchNav() {
+    let startY = 0;
+    document.addEventListener('touchstart', (e) => { startY = e.touches[0].clientY; }, { passive: true });
+    document.addEventListener('touchend', (e) => {
+      const dy = startY - e.changedTouches[0].clientY;
+      if (Math.abs(dy) > 50) {
+        this.goToSlide(this.currentSlide + (dy > 0 ? 1 : -1));
+      }
+    }, { passive: true });
+  }
+
+  setupWheelNav() {
+    let timeout;
+    document.addEventListener('wheel', (e) => {
+      if (this.isScrolling) return;
+      clearTimeout(timeout);
+      timeout = setTimeout(() => {
+        if (Math.abs(e.deltaY) > 30) {
+          this.isScrolling = true;
+          this.goToSlide(this.currentSlide + (e.deltaY > 0 ? 1 : -1));
+          setTimeout(() => { this.isScrolling = false; }, 800);
+        }
+      }, 50);
+    }, { passive: true });
+  }
+
+  goToSlide(idx) {
+    idx = Math.max(0, Math.min(idx, this.slides.length - 1));
+    this.slides[idx].scrollIntoView({ behavior: 'smooth' });
+    this.currentSlide = idx;
+    this.updateProgressBar();
+    this.updateNavDots();
+  }
+
+  setupProgressBar() { this.updateProgressBar(); }
+
+  updateProgressBar() {
+    const pct = ((this.currentSlide + 1) / this.slides.length) * 100;
+    this.progressBar.style.width = pct + '%';
+  }
+
+  setupNavDots() {
+    this.navDotsContainer.innerHTML = '';
+    this.slides.forEach((_, i) => {
+      const dot = document.createElement('button');
+      dot.className = 'nav-dot' + (i === 0 ? ' active' : '');
+      dot.setAttribute('aria-label', 'Go to slide ' + (i + 1));
+      dot.addEventListener('click', () => this.goToSlide(i));
+      this.navDotsContainer.appendChild(dot);
+    });
+  }
+
+  updateNavDots() {
+    const dots = this.navDotsContainer.querySelectorAll('.nav-dot');
+    dots.forEach((dot, i) => {
+      dot.classList.toggle('active', i === this.currentSlide);
+    });
+  }
+}
+
+/* === INLINE EDITOR === */
+class InlineEditor {
+  constructor() {
+    this.isActive = false;
+    this.storageKey = 'inkstone-talk-edits';
+    this.setupToggle();
+    this.restoreEdits();
+  }
+
+  setupToggle() {
+    const hotzone = document.getElementById('editHotzone');
+    const toggle = document.getElementById('editToggle');
+    let hideTimeout = null;
+
+    toggle.addEventListener('click', () => this.toggleEditMode());
+
+    hotzone.addEventListener('mouseenter', () => {
+      clearTimeout(hideTimeout);
+      toggle.classList.add('show');
+    });
+    hotzone.addEventListener('mouseleave', () => {
+      hideTimeout = setTimeout(() => {
+        if (!this.isActive) toggle.classList.remove('show');
+      }, 400);
+    });
+    toggle.addEventListener('mouseenter', () => clearTimeout(hideTimeout));
+    toggle.addEventListener('mouseleave', () => {
+      hideTimeout = setTimeout(() => {
+        if (!this.isActive) toggle.classList.remove('show');
+      }, 400);
+    });
+
+    hotzone.addEventListener('click', () => this.toggleEditMode());
+
+    document.addEventListener('keydown', (e) => {
+      if ((e.key === 'e' || e.key === 'E') && !e.target.getAttribute('contenteditable')) {
+        this.toggleEditMode();
+      }
+      if (e.ctrlKey && e.key === 's' && this.isActive) {
+        e.preventDefault();
+        this.saveEdits();
+        this.exportFile();
+      }
+    });
+  }
+
+  toggleEditMode() {
+    this.isActive = !this.isActive;
+    const toggle = document.getElementById('editToggle');
+    const banner = document.getElementById('editBanner');
+
+    if (this.isActive) {
+      document.body.classList.add('edit-active');
+      toggle.classList.add('active');
+      toggle.innerHTML = '&#10003; Done';
+      banner.classList.add('active');
+      document.querySelectorAll('h1, h2, h3, h4, p, li, span, td, .stat-number, .stat-label, .tag, .quote-block').forEach(el => {
+        if (!el.closest('.nav-dots') && !el.closest('.edit-banner') && !el.closest('.code-block') && !el.closest('.edit-toggle')) {
+          el.setAttribute('contenteditable', 'true');
+        }
+      });
+    } else {
+      document.body.classList.remove('edit-active');
+      toggle.classList.remove('active');
+      toggle.innerHTML = '&#9998; Edit';
+      banner.classList.remove('active');
+      document.querySelectorAll('[contenteditable]').forEach(el => el.removeAttribute('contenteditable'));
+      this.saveEdits();
+    }
+  }
+
+  saveEdits() {
+    const data = {};
+    document.querySelectorAll('.slide').forEach((slide, i) => {
+      data['slide-' + i] = slide.innerHTML;
+    });
+    localStorage.setItem(this.storageKey, JSON.stringify(data));
+  }
+
+  restoreEdits() {
+    const data = JSON.parse(localStorage.getItem(this.storageKey) || 'null');
+    if (!data) return;
+    document.querySelectorAll('.slide').forEach((slide, i) => {
+      if (data['slide-' + i]) slide.innerHTML = data['slide-' + i];
+    });
+  }
+
+  exportFile() {
+    const editableEls = Array.from(document.querySelectorAll('[contenteditable]'));
+    editableEls.forEach(el => el.removeAttribute('contenteditable'));
+    document.body.classList.remove('edit-active');
+
+    const editToggle = document.getElementById('editToggle');
+    const editBanner = document.getElementById('editBanner');
+    editToggle?.classList.remove('active', 'show');
+    editBanner?.classList.remove('active');
+
+    const html = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
+
+    document.body.classList.add('edit-active');
+    editableEls.forEach(el => el.setAttribute('contenteditable', 'true'));
+    editToggle?.classList.add('active');
+    editBanner?.classList.add('active');
+
+    const blob = new Blob([html], { type: 'text/html' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'hkoscon-2026-inkstone-talk.html';
+    a.click();
+    URL.revokeObjectURL(a.href);
+  }
+}
+
+const presentation = new SlidePresentation();
+const editor = new InlineEditor();
+</script>
+</body>
+</html>
