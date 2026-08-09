@@ -148,6 +148,35 @@ img, .image-container {
   .slide-content[style*="flex-direction: row"] > div[style*="position: relative"] {
     padding-top: clamp(1.5rem, 4vh, 3rem) !important;
   }
+  .watkins-slide .slide-content {
+    display: flex !important;
+    flex-direction: column !important;
+    height: auto !important;
+    min-height: 100% !important;
+    gap: 0 !important;
+  }
+  .watkins-slide .watkin-panel {
+    flex: none !important;
+    width: 100% !important;
+    height: 44vh !important;
+    min-height: 44vh !important;
+    overflow: hidden !important;
+  }
+  .watkins-slide .watkin-panel:first-child {
+    border-right: 0 !important;
+    border-bottom: 10px solid #fff !important;
+  }
+  .watkins-slide .watkin-panel img {
+    width: 100% !important;
+    height: 100% !important;
+    max-height: none !important;
+    object-fit: cover !important;
+    object-position: center top !important;
+  }
+  .watkins-slide .watkins-caption {
+    position: static !important;
+    padding: clamp(1rem, 4vw, 2rem) clamp(1rem, 4vw, 2rem) clamp(1.5rem, 4vh, 3rem);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -722,15 +751,15 @@ body.edit-active [contenteditable] {
   <div class="slide-number" data-fixed>INKSTONE 硯台</div>
 </section>
 
-<section class="slide">
+<section class="slide watkins-slide">
   <div class="slide-content" style="padding: 0; max-height: none; width: 100%; height: 100%; background: #000; position: relative; display: flex; flex-direction: row; gap: 0;">
-    <div style="flex: 0 0 50%; height: 100%; overflow: hidden; background: #000; border-right: 10px solid #fff;">
+    <div class="watkin-panel" style="flex: 0 0 50%; height: 100%; overflow: hidden; background: #000; border-right: 10px solid #fff;">
       <img src="watkins-photo.webp" alt="Watkins Books, London" style="width: 100%; height: 100%; max-height: none; object-fit: cover; object-position: center;">
     </div>
-    <div style="flex: 0 0 50%; height: 100%; overflow: hidden; background: #000;">
+    <div class="watkin-panel" style="flex: 0 0 50%; height: 100%; overflow: hidden; background: #000;">
       <img src="watkins-photo-2.webp" alt="Watkins Books, London" style="width: 100%; height: 100%; max-height: none; object-fit: cover; object-position: center top;">
     </div>
-    <div class="reveal" style="transition-delay: 0.3s; position: absolute; left: clamp(1.5rem, 4vw, 4rem); bottom: clamp(1.5rem, 5vh, 4rem); text-align: left;">
+    <div class="reveal watkins-caption" style="transition-delay: 0.3s; position: absolute; left: clamp(1.5rem, 4vw, 4rem); bottom: clamp(1.5rem, 5vh, 4rem); text-align: left;">
       <p style="font-family: var(--font-display); font-weight: 700; color: #fff; font-size: clamp(2rem, 5.5vw, 4.5rem); line-height: 1.05; text-shadow: 0 2px 6px rgba(0,0,0,0.85), 0 4px 24px rgba(0,0,0,0.7); margin: 0;">Watkins Books, London</p>
       <p style="font-family: var(--font-display); font-style: italic; color: #fff; font-size: clamp(1.1rem, 2.6vw, 2.2rem); text-shadow: 0 2px 6px rgba(0,0,0,0.9), 0 4px 18px rgba(0,0,0,0.7); margin: clamp(0.2rem, 0.6vh, 0.5rem) 0 0;">It knew nothing about me. Nothing was fed to it.</p>
       <p style="font-family: var(--font-mono); font-size: var(--small-size); color: rgba(255,255,255,0.55); text-shadow: 0 1px 4px rgba(0,0,0,0.9); margin: clamp(0.6rem, 1.5vh, 1rem) 0 0;">one question, five minutes &middot; augustinchan.dev/posts/2026-07-13-one-question-five-minutes</p>
