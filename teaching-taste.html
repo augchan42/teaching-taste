@@ -703,6 +703,228 @@ body.edit-active [contenteditable] {
 }
 
 /* ===========================================
+   HEXAGRAM / YILIN GRAPHICS
+   =========================================== */
+.hx {
+  display: flex;
+  flex-direction: column;
+  width: clamp(88px, 12vw, 160px);
+  gap: clamp(6px, 1vh, 10px);
+  flex-shrink: 0;
+}
+.hx-sm {
+  width: clamp(28px, 4.2vw, 48px);
+  gap: clamp(3px, 0.5vh, 5px);
+}
+.hx-lg {
+  width: clamp(100px, 14vw, 180px);
+}
+.hx-yang,
+.hx-yin {
+  height: clamp(9px, 1.4vh, 15px);
+}
+.hx-sm .hx-yang,
+.hx-sm .hx-yin { height: clamp(4px, 0.7vh, 7px); }
+.hx-lg .hx-yang,
+.hx-lg .hx-yin { height: clamp(10px, 1.5vh, 16px); }
+.hx-yang { background: var(--foreground); }
+.hx-yin { display: flex; justify-content: space-between; }
+.hx-yin span {
+  display: block;
+  width: 42%;
+  height: 100%;
+  background: var(--foreground);
+}
+.hx-yang.chg { background: var(--clay); }
+.hx-yin.chg span { background: var(--clay); }
+.hx-gap { height: clamp(0.7rem, 1.8vh, 1.4rem); }
+.hx-sm .hx-gap { height: clamp(0.25rem, 0.6vh, 0.5rem); }
+.hx-lg .hx-gap { height: clamp(1.2rem, 3vh, 2.5rem); }
+
+.hx-label {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(0.35rem, 0.8vh, 0.6rem);
+}
+.hx-caption {
+  font-family: var(--font-cjk);
+  font-size: clamp(0.85rem, 1.6vw, 1.2rem);
+  color: var(--muted);
+  line-height: 1.2;
+  text-align: center;
+}
+
+.combo-eq {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: clamp(1.5rem, 5vw, 4.5rem);
+  flex-wrap: wrap;
+  margin: clamp(0.8rem, 2vh, 1.5rem) 0;
+}
+.combo-eq > div { text-align: center; }
+.combo-states {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  gap: clamp(0.7rem, 1.5vw, 1.2rem);
+  margin-top: 0.7em;
+}
+.hx-bit {
+  width: clamp(52px, 7vw, 80px);
+}
+.hx-bit .hx-yang,
+.hx-bit .hx-yin { height: clamp(10px, 1.4vh, 14px); }
+.hx-md {
+  width: clamp(56px, 8vw, 96px);
+  gap: clamp(4px, 0.7vh, 7px);
+}
+.hx-md .hx-yang,
+.hx-md .hx-yin { height: clamp(6px, 1vh, 10px); }
+.hx-md .hx-gap { height: clamp(0.4rem, 1vh, 0.7rem); }
+.combo-eq .stat-number { font-size: clamp(1.8rem, 4.2vw, 3.2rem); }
+
+.trigram-row {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  gap: clamp(0.55rem, 1.6vw, 1.4rem);
+  flex-wrap: wrap;
+  margin-top: clamp(0.6rem, 1.5vh, 1.2rem);
+}
+
+.pair-stage {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(1.2rem, 3.5vw, 3rem);
+  flex-wrap: wrap;
+  margin: clamp(1.2rem, 3vh, 2.2rem) 0;
+}
+.pair-arrow {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.3em;
+  color: var(--clay);
+  font-size: clamp(2rem, 4vw, 3.2rem);
+  line-height: 1;
+  font-weight: 600;
+}
+.pair-key {
+  background: var(--tone);
+  border-left: 4px solid var(--clay);
+  padding: clamp(0.8rem, 1.8vw, 1.4rem) clamp(1rem, 2vw, 1.6rem);
+  min-width: clamp(160px, 18vw, 240px);
+}
+.pair-key code {
+  font-family: var(--font-mono);
+  font-size: clamp(1.4rem, 3vw, 2.2rem);
+  font-weight: 500;
+  color: var(--clay);
+}
+
+.yilin-matrix-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(0.4rem, 1vh, 0.7rem);
+  flex: 1;
+}
+.yilin-axis {
+  font-family: var(--font-mono);
+  font-size: var(--small-size);
+  color: var(--muted);
+  letter-spacing: 0.04em;
+}
+.yilin-row {
+  display: flex;
+  align-items: center;
+  gap: clamp(0.5rem, 1vw, 0.8rem);
+}
+.yilin-axis-y {
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+}
+.yilin-matrix {
+  position: relative;
+  width: min(68vh, 48vw, 640px);
+  aspect-ratio: 1;
+  background-color: var(--tone);
+  background-image:
+    repeating-linear-gradient(
+      to right,
+      transparent 0,
+      transparent calc(100% / 64 - 1px),
+      var(--border) calc(100% / 64 - 1px),
+      var(--border) calc(100% / 64)
+    ),
+    repeating-linear-gradient(
+      to bottom,
+      transparent 0,
+      transparent calc(100% / 64 - 1px),
+      var(--border) calc(100% / 64 - 1px),
+      var(--border) calc(100% / 64)
+    );
+  border: 1px solid var(--border);
+}
+.yilin-diag {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom right,
+    transparent calc(50% - 1px),
+    var(--gold) calc(50% - 1px),
+    var(--gold) calc(50% + 1px),
+    transparent calc(50% + 1px)
+  );
+  opacity: 0.55;
+  pointer-events: none;
+}
+.yilin-hi {
+  position: absolute;
+  width: calc(100% / 64);
+  height: calc(100% / 64);
+  left: calc(58 * 100% / 64);
+  top: calc(47 * 100% / 64);
+  background: var(--clay);
+  box-shadow: 0 0 0 3px var(--paper), 0 0 0 6px var(--clay);
+  transform: scale(2.4);
+  transform-origin: center;
+  z-index: 2;
+  pointer-events: none;
+}
+.yilin-copy {
+  flex: 0 1 380px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: clamp(0.6rem, 1.5vh, 1.1rem);
+}
+.yilin-legend {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4em;
+  font-size: var(--small-size);
+  color: var(--muted);
+}
+.yilin-swatch {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  margin-right: 0.45em;
+  vertical-align: middle;
+}
+.yilin-swatch.clay { background: var(--clay); }
+.yilin-swatch.gold { background: var(--gold); }
+
+@media (max-width: 600px) {
+  .yilin-matrix { width: min(78vw, 70vh); }
+  .pair-key { min-width: 0; width: 100%; }
+}
+
+/* ===========================================
    SLIDE-SPECIFIC STYLES
    =========================================== */
 .title-slide .slide-content {
@@ -795,39 +1017,195 @@ body.edit-active [contenteditable] {
   <div class="ink-wash-tr"></div>
   <div class="accent-bar"></div>
   <div class="slide-content centered">
-    <h2 class="reveal" style="margin-bottom: clamp(0.8rem, 2vh, 1.5rem);">The I-Ching &middot; <span class="font-cjk">易經</span></h2>
-    <p class="reveal" style="max-width: 700px; text-align: center; font-size: var(--h3-size);">64 hexagrams. Six lines — solid or broken.<br>Every possible pattern of change.</p>
-    <div class="reveal" style="transition-delay: 0.2s; display: flex; align-items: center; gap: clamp(2rem, 5vw, 4rem); margin: clamp(2rem, 5vh, 4rem) 0;">
-      <!-- Hexagram lines (style from 8bitoracle) -->
-      <div style="display: flex; flex-direction: column; align-items: center; width: clamp(100px, 14vw, 180px);">
-        <!-- Upper trigram: Gen/Mountain — solid, broken, broken (top to bottom) -->
-        <div style="width: 100%; display: flex; flex-direction: column; gap: clamp(6px, 1vh, 10px);">
-          <div style="width: 100%; height: clamp(10px, 1.5vh, 16px); background: var(--foreground);"></div>
-          <div style="width: 100%; display: flex; justify-content: space-between;"><div style="width: 45%; height: clamp(10px, 1.5vh, 16px); background: var(--foreground);"></div><div style="width: 45%; height: clamp(10px, 1.5vh, 16px); background: var(--foreground);"></div></div>
-          <div style="width: 100%; display: flex; justify-content: space-between;"><div style="width: 45%; height: clamp(10px, 1.5vh, 16px); background: var(--foreground);"></div><div style="width: 45%; height: clamp(10px, 1.5vh, 16px); background: var(--foreground);"></div></div>
-        </div>
-        <!-- Gap between trigrams -->
-        <div style="height: clamp(1.2rem, 3vh, 2.5rem);"></div>
-        <!-- Lower trigram: Kan/Water — broken, solid, broken (top to bottom) -->
-        <div style="width: 100%; display: flex; flex-direction: column; gap: clamp(6px, 1vh, 10px);">
-          <div style="width: 100%; display: flex; justify-content: space-between;"><div style="width: 45%; height: clamp(10px, 1.5vh, 16px); background: var(--foreground);"></div><div style="width: 45%; height: clamp(10px, 1.5vh, 16px); background: var(--foreground);"></div></div>
-          <div style="width: 100%; height: clamp(10px, 1.5vh, 16px); background: var(--foreground);"></div>
-          <div style="width: 100%; display: flex; justify-content: space-between;"><div style="width: 45%; height: clamp(10px, 1.5vh, 16px); background: var(--foreground);"></div><div style="width: 45%; height: clamp(10px, 1.5vh, 16px); background: var(--foreground);"></div></div>
+    <h2 class="reveal" style="margin-bottom: clamp(0.3rem, 0.8vh, 0.6rem);">The I-Ching &middot; <span class="font-cjk">易經</span></h2>
+    <p class="reveal" style="font-size: var(--h3-size);">Six bits. Sixty-four states.</p>
+    <div class="combo-eq reveal" style="transition-delay: 0.1s;">
+      <div>
+        <div class="stat-number">2<sup style="font-size: 0.45em;">1</sup> = 2</div>
+        <div class="stat-label">one line</div>
+        <div class="combo-states">
+          <div class="hx-label">
+            <div class="hx hx-bit" aria-hidden="true"><div class="hx-yang"></div></div>
+            <span class="hx-caption">yang</span>
+          </div>
+          <div class="hx-label">
+            <div class="hx hx-bit" aria-hidden="true"><div class="hx-yin"><span></span><span></span></div></div>
+            <span class="hx-caption">yin</span>
+          </div>
         </div>
       </div>
-      <!-- Trigram labels -->
+      <div>
+        <div class="stat-number">2<sup style="font-size: 0.45em;">3</sup> = 8</div>
+        <div class="stat-label">trigrams</div>
+        <div class="hx hx-md" aria-hidden="true" style="margin: 0.7em auto 0;">
+          <div class="hx-yang"></div>
+          <div class="hx-yin"><span></span><span></span></div>
+          <div class="hx-yin"><span></span><span></span></div>
+        </div>
+        <span class="hx-caption">艮</span>
+      </div>
+      <div>
+        <div class="stat-number">2<sup style="font-size: 0.45em;">6</sup> = 64</div>
+        <div class="stat-label">hexagrams</div>
+        <div class="hx hx-md" aria-hidden="true" style="margin: 0.7em auto 0;">
+          <div class="hx-yang"></div>
+          <div class="hx-yin"><span></span><span></span></div>
+          <div class="hx-yin"><span></span><span></span></div>
+          <div class="hx-gap"></div>
+          <div class="hx-yin"><span></span><span></span></div>
+          <div class="hx-yang"></div>
+          <div class="hx-yin"><span></span><span></span></div>
+        </div>
+        <span class="hx-caption">蒙</span>
+      </div>
+    </div>
+    <div class="trigram-row reveal" style="transition-delay: 0.25s;" aria-label="The eight trigrams">
+      <div class="hx-label">
+        <div class="hx hx-sm" aria-hidden="true"><div class="hx-yang"></div><div class="hx-yang"></div><div class="hx-yang"></div></div>
+        <span class="hx-caption">乾</span>
+      </div>
+      <div class="hx-label">
+        <div class="hx hx-sm" aria-hidden="true"><div class="hx-yin"><span></span><span></span></div><div class="hx-yang"></div><div class="hx-yang"></div></div>
+        <span class="hx-caption">兌</span>
+      </div>
+      <div class="hx-label">
+        <div class="hx hx-sm" aria-hidden="true"><div class="hx-yang"></div><div class="hx-yin"><span></span><span></span></div><div class="hx-yang"></div></div>
+        <span class="hx-caption">離</span>
+      </div>
+      <div class="hx-label">
+        <div class="hx hx-sm" aria-hidden="true"><div class="hx-yin"><span></span><span></span></div><div class="hx-yin"><span></span><span></span></div><div class="hx-yang"></div></div>
+        <span class="hx-caption">震</span>
+      </div>
+      <div class="hx-label">
+        <div class="hx hx-sm" aria-hidden="true"><div class="hx-yang"></div><div class="hx-yang"></div><div class="hx-yin"><span></span><span></span></div></div>
+        <span class="hx-caption">巽</span>
+      </div>
+      <div class="hx-label">
+        <div class="hx hx-sm" aria-hidden="true"><div class="hx-yin"><span></span><span></span></div><div class="hx-yang"></div><div class="hx-yin"><span></span><span></span></div></div>
+        <span class="hx-caption">坎</span>
+      </div>
+      <div class="hx-label">
+        <div class="hx hx-sm" aria-hidden="true"><div class="hx-yang"></div><div class="hx-yin"><span></span><span></span></div><div class="hx-yin"><span></span><span></span></div></div>
+        <span class="hx-caption">艮</span>
+      </div>
+      <div class="hx-label">
+        <div class="hx hx-sm" aria-hidden="true"><div class="hx-yin"><span></span><span></span></div><div class="hx-yin"><span></span><span></span></div><div class="hx-yin"><span></span><span></span></div></div>
+        <span class="hx-caption">坤</span>
+      </div>
+    </div>
+    <p class="reveal" style="transition-delay: 0.35s; font-size: var(--h3-size); color: var(--clay); font-weight: 600; margin-top: clamp(1rem, 2.5vh, 1.8rem);">That is the I-Ching.</p>
+  </div>
+  <div class="slide-number"></div>
+</section>
+
+<section class="slide">
+  <div class="paper-texture"></div>
+  <div class="ink-wash-tr"></div>
+  <div class="accent-bar"></div>
+  <div class="slide-content centered">
+    <h2 class="reveal" style="margin-bottom: clamp(0.4rem, 1vh, 0.8rem);">One of sixty-four</h2>
+    <p class="reveal" style="max-width: 700px; text-align: center; font-size: var(--h3-size);">Upper image plus lower image.</p>
+    <div class="reveal" style="transition-delay: 0.2s; display: flex; align-items: center; gap: clamp(2rem, 5vw, 4rem); margin: clamp(1.5rem, 4vh, 3rem) 0;">
+      <div class="hx hx-lg" aria-hidden="true">
+        <div class="hx-yang"></div>
+        <div class="hx-yin"><span></span><span></span></div>
+        <div class="hx-yin"><span></span><span></span></div>
+        <div class="hx-gap"></div>
+        <div class="hx-yin"><span></span><span></span></div>
+        <div class="hx-yang"></div>
+        <div class="hx-yin"><span></span><span></span></div>
+      </div>
       <div style="display: flex; flex-direction: column; color: var(--muted); gap: clamp(0.5rem, 1.5vh, 1.2rem);">
         <div style="display: flex; align-items: baseline; gap: clamp(0.4rem, 0.8vw, 0.8rem);">
-          <span style="font-family: var(--font-cjk); font-size: clamp(1.8rem, 4vw, 3.5rem);">艮</span>
+          <span style="font-family: var(--font-cjk); font-size: clamp(1.8rem, 4vw, 3.5rem); color: var(--foreground);">艮</span>
           <span style="font-size: var(--body-size); font-family: var(--font-body);">Mountain</span>
         </div>
         <div style="display: flex; align-items: baseline; gap: clamp(0.4rem, 0.8vw, 0.8rem);">
-          <span style="font-family: var(--font-cjk); font-size: clamp(1.8rem, 4vw, 3.5rem);">坎</span>
+          <span style="font-family: var(--font-cjk); font-size: clamp(1.8rem, 4vw, 3.5rem); color: var(--foreground);">坎</span>
           <span style="font-size: var(--body-size); font-family: var(--font-body);">Water</span>
         </div>
       </div>
     </div>
     <p class="reveal" style="transition-delay: 0.3s; font-size: var(--h3-size); color: var(--muted);"><span class="font-cjk">蒙</span> &middot; Youthful Folly</p>
+  </div>
+  <div class="slide-number"></div>
+</section>
+
+<section class="slide">
+  <div class="paper-texture"></div>
+  <div class="accent-bar"></div>
+  <div class="slide-content centered">
+    <h2 class="reveal">A reading is a move</h2>
+    <p class="reveal" style="font-size: var(--h3-size); margin-top: clamp(0.3rem, 0.8vh, 0.5rem);">Some lines change. You get a second hexagram.</p>
+    <div class="pair-stage reveal" style="transition-delay: 0.15s;">
+      <div class="hx-label">
+        <p class="text-muted" style="font-size: var(--small-size); font-family: var(--font-mono);">present · 48</p>
+        <div class="hx hx-lg" aria-hidden="true">
+          <div class="hx-yin chg"><span></span><span></span></div>
+          <div class="hx-yang"></div>
+          <div class="hx-yin"><span></span><span></span></div>
+          <div class="hx-gap"></div>
+          <div class="hx-yang chg"></div>
+          <div class="hx-yang"></div>
+          <div class="hx-yin"><span></span><span></span></div>
+        </div>
+        <p style="font-size: var(--body-size);"><span class="font-cjk">井</span> Jing · The Well</p>
+      </div>
+      <div class="pair-arrow">
+        <span aria-hidden="true">&rarr;</span>
+        <span style="font-size: var(--small-size); font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase;">changing lines</span>
+      </div>
+      <div class="hx-label">
+        <p class="text-muted" style="font-size: var(--small-size); font-family: var(--font-mono);">relating · 59</p>
+        <div class="hx hx-lg" aria-hidden="true">
+          <div class="hx-yang chg"></div>
+          <div class="hx-yang"></div>
+          <div class="hx-yin"><span></span><span></span></div>
+          <div class="hx-gap"></div>
+          <div class="hx-yin chg"><span></span><span></span></div>
+          <div class="hx-yang"></div>
+          <div class="hx-yin"><span></span><span></span></div>
+        </div>
+        <p style="font-size: var(--body-size);"><span class="font-cjk">渙</span> Huan · Dispersion</p>
+      </div>
+      <div class="pair-key reveal" style="transition-delay: 0.3s;">
+        <p class="stat-label" style="margin-bottom: 0.3em;">lookup key</p>
+        <p><code>48-59</code></p>
+        <p class="text-muted" style="font-size: var(--body-size); margin-top: 0.5em; line-height: 1.4;">one cell, one verse,<br>one painting</p>
+      </div>
+    </div>
+  </div>
+  <div class="slide-number"></div>
+</section>
+
+<section class="slide">
+  <div class="paper-texture"></div>
+  <div class="ink-wash-tr"></div>
+  <div class="accent-bar"></div>
+  <div class="slide-content" style="flex-direction: row; align-items: center; gap: clamp(1.5rem, 4vw, 3.5rem);">
+    <div class="yilin-matrix-wrap reveal-scale">
+      <span class="yilin-axis">to (relating hexagram)</span>
+      <div class="yilin-row">
+        <span class="yilin-axis yilin-axis-y">from (present)</span>
+        <div class="yilin-matrix" role="img" aria-label="64 by 64 Jiaoshi Yilin table with cell 48-59 highlighted">
+          <div class="yilin-diag"></div>
+          <div class="yilin-hi"></div>
+        </div>
+      </div>
+    </div>
+    <div class="yilin-copy">
+      <h2 class="reveal">Every pair gets a poem</h2>
+      <p class="reveal" style="font-size: var(--h3-size); line-height: 1.4;"><span class="font-cjk">焦氏易林</span> Jiaoshi Yilin — a Han-dynasty table. A verse in every cell.</p>
+      <div class="reveal">
+        <div class="stat-number">64&times;64 = 4,096</div>
+        <div class="stat-label">complete transition table</div>
+      </div>
+      <p class="reveal" style="font-size: var(--body-size); line-height: 1.45;">Row is where you are. Column is where the change points. Engineer translation: <span class="font-mono" style="color: var(--clay); font-size: inherit;">paintings[from][to]</span></p>
+      <div class="yilin-legend reveal">
+        <span><span class="yilin-swatch clay"></span>48 → 59 · the overflowing well</span>
+        <span><span class="yilin-swatch gold"></span>diagonal · present = relating</span>
+      </div>
+    </div>
   </div>
   <div class="slide-number"></div>
 </section>
@@ -841,7 +1219,7 @@ body.edit-active [contenteditable] {
     </div>
     <div style="flex: 1; display: flex; flex-direction: column; justify-content: center; padding: var(--slide-padding); padding-left: clamp(2rem, 4vw, 4rem); gap: clamp(1rem, 2.5vh, 2rem);">
       <h2 class="reveal">The Challenge</h2>
-      <p class="reveal" style="font-size: var(--h3-size); line-height: 1.5;">Generate <strong>4,096 unique ink paintings</strong> — one for every verse in the Jiaoshi Yilin <span class="font-cjk">焦氏易林</span></p>
+      <p class="reveal" style="font-size: var(--h3-size); line-height: 1.5;">Generate <strong>4,096 unique ink paintings</strong> — one for every cell.</p>
       <div class="reveal" style="display: flex; gap: clamp(1.5rem, 3vw, 3rem); flex-wrap: wrap;">
         <div>
           <div class="stat-number">4,096</div>

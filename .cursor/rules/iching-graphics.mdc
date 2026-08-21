@@ -1,0 +1,21 @@
+---
+description: Explain I-Ching and Jiaoshi Yilin as combinatorics, never as one hexagram plus a number
+globs: teaching-taste.html
+alwaysApply: false
+---
+
+# I-Ching / Yilin graphics
+
+Do not regress to a single hexagram slide that asserts “64” then jumps to 4,096.
+
+Required sequence before Challenge:
+
+1. Bits — `2¹=2` (yang | yin side by side, not stacked), `2³=8` (a trigram + the eight), `2⁶=64` (a 6-line hexagram, 蒙). Never claim 64 without drawing six lines.
+2. 蒙 — worked hexagram only (“one of sixty-four”).
+3. Pair — 井 48 → 渙 59, clay on changing lines, key `48-59`.
+4. Grid — 64×64 matrix, cell 48–59 highlighted, `paintings[from][to]`.
+5. Challenge — product job (paint every cell), not another combinatorics lesson.
+
+Speak combinatorics, not cosmology. Do not put Shao Yong, qi, coins, or authorship on these slides. Gallery keys (`21→27`, `48-59`) are coordinates — do not re-explain hexagrams there.
+
+Worked pair is always 井 48 → 渙 59 (overflowing well, already in the deck).
