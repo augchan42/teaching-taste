@@ -831,6 +831,7 @@ body.edit-active [contenteditable] {
   align-items: center;
   gap: clamp(0.4rem, 1vh, 0.7rem);
   flex: 1;
+  padding-bottom: clamp(1rem, 2vh, 1.6rem);
 }
 .yilin-axis {
   font-family: var(--font-mono);
@@ -841,11 +842,51 @@ body.edit-active [contenteditable] {
 .yilin-row {
   display: flex;
   align-items: center;
-  gap: clamp(0.5rem, 1vw, 0.8rem);
+  gap: clamp(0.7rem, 1.4vw, 1.1rem);
 }
 .yilin-axis-y {
   writing-mode: vertical-rl;
   transform: rotate(180deg);
+}
+.yilin-plot {
+  --yilin-from: 48;
+  --yilin-to: 59;
+  position: relative;
+}
+.yilin-tick {
+  position: absolute;
+  font-family: var(--font-mono);
+  font-size: clamp(0.9rem, 1.8vw, 1.25rem);
+  font-weight: 600;
+  color: var(--clay);
+  line-height: 1;
+  z-index: 3;
+  pointer-events: none;
+}
+.yilin-tick-x {
+  left: calc((var(--yilin-to) - 0.5) * 100% / 64);
+  top: 0;
+  transform: translate(-50%, calc(-100% - 0.35em));
+}
+.yilin-tick-y {
+  top: calc((var(--yilin-from) - 0.5) * 100% / 64);
+  left: 0;
+  transform: translate(calc(-100% - 0.4em), -50%);
+}
+.yilin-corner {
+  font-size: clamp(0.7rem, 1.3vw, 0.95rem);
+  font-weight: 500;
+  color: var(--muted);
+}
+.yilin-corner-tl {
+  left: 0;
+  top: 0;
+  transform: translate(calc(-100% - 0.3em), calc(-100% - 0.3em));
+}
+.yilin-corner-br {
+  left: 100%;
+  top: 100%;
+  transform: translate(0.35em, 0.4em);
 }
 .yilin-matrix {
   position: relative;
@@ -886,8 +927,8 @@ body.edit-active [contenteditable] {
   position: absolute;
   width: calc(100% / 64);
   height: calc(100% / 64);
-  left: calc(58 * 100% / 64);
-  top: calc(47 * 100% / 64);
+  left: calc((var(--yilin-to) - 1) * 100% / 64);
+  top: calc((var(--yilin-from) - 1) * 100% / 64);
   background: var(--clay);
   box-shadow: 0 0 0 3px var(--paper), 0 0 0 6px var(--clay);
   transform: scale(2.4);
@@ -1187,9 +1228,15 @@ body.edit-active [contenteditable] {
       <span class="yilin-axis">to (relating hexagram)</span>
       <div class="yilin-row">
         <span class="yilin-axis yilin-axis-y">from (present)</span>
-        <div class="yilin-matrix" role="img" aria-label="64 by 64 Jiaoshi Yilin table with cell 48-59 highlighted">
-          <div class="yilin-diag"></div>
-          <div class="yilin-hi"></div>
+        <div class="yilin-plot">
+          <span class="yilin-tick yilin-corner yilin-corner-tl">1,1</span>
+          <span class="yilin-tick yilin-tick-x">59</span>
+          <span class="yilin-tick yilin-tick-y">48</span>
+          <span class="yilin-tick yilin-corner yilin-corner-br">64,64</span>
+          <div class="yilin-matrix" role="img" aria-label="64 by 64 Jiaoshi Yilin table with cell 48-59 highlighted">
+            <div class="yilin-diag"></div>
+            <div class="yilin-hi"></div>
+          </div>
         </div>
       </div>
     </div>
