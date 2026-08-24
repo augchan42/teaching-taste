@@ -423,7 +423,7 @@ p, li {
 
 .stat-number {
   font-family: var(--font-display);
-  font-size: clamp(2rem, 5vw, 4rem);
+  font-size: var(--h3-size);
   font-weight: 700;
   color: var(--clay);
   line-height: 1;
@@ -926,7 +926,7 @@ body.edit-active [contenteditable] {
   pointer-events: none;
 }
 .yilin-copy {
-  flex: 0 1 380px;
+  flex: 0 1 clamp(380px, 32vw, 560px);
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -1229,7 +1229,7 @@ body.edit-active [contenteditable] {
     </div>
     <div class="yilin-copy">
       <h2 class="reveal">Every pair gets a poem</h2>
-      <p class="reveal" style="font-size: var(--h3-size); line-height: 1.4;"><span class="font-cjk">焦氏易林</span> Jiaoshi Yilin — a Han-dynasty table. A verse in every cell.</p>
+      <p class="reveal" style="font-size: var(--body-size); line-height: 1.45;"><span class="font-cjk">焦氏易林</span> Jiaoshi Yilin — a Han-dynasty table. A verse in every cell.</p>
       <div class="reveal">
         <div class="stat-number">64&times;64 = 4,096</div>
         <div class="stat-label">complete transition table</div>
@@ -1639,19 +1639,19 @@ above a gorge filled with morning mist. Chinese ink painting."</div>
     </div>
     <div class="reveal" style="display: flex; gap: clamp(1.5rem, 4vw, 4rem); justify-content: center; margin-top: clamp(0.8rem, 2vh, 1.2rem); flex-wrap: wrap;">
       <div style="text-align: center;">
-        <div class="stat-number" style="font-size: clamp(1.5rem, 3vw, 2.5rem);">5</div>
+        <div class="stat-number">5</div>
         <div class="stat-label">style categories</div>
       </div>
       <div style="text-align: center;">
-        <div class="stat-number" style="font-size: clamp(1.5rem, 3vw, 2.5rem);">7</div>
+        <div class="stat-number">7</div>
         <div class="stat-label">composition rules</div>
       </div>
       <div style="text-align: center;">
-        <div class="stat-number" style="font-size: clamp(1.5rem, 3vw, 2.5rem);">8</div>
+        <div class="stat-number">8</div>
         <div class="stat-label">reference prompts</div>
       </div>
       <div style="text-align: center;">
-        <div class="stat-number" style="font-size: clamp(1.5rem, 3vw, 2.5rem);">7</div>
+        <div class="stat-number">7</div>
         <div class="stat-label">safety patterns</div>
       </div>
     </div>
@@ -1753,6 +1753,7 @@ Given a verse, produce:
 ...</div>
       <div style="display: flex; flex-direction: column; gap: clamp(0.6rem, 1.8vh, 1.4rem);">
         <p class="reveal" style="transition-delay: 0.3s;">A <strong>SKILL.md</strong> file — YAML frontmatter plus instructions. No runtime code, no weights. Just text you can open and read.</p>
+        <p class="reveal font-mono" style="transition-delay: 0.35s; font-size: var(--small-size); color: var(--clay);">github.com/augchan42/inkstone</p>
         <p class="reveal" style="transition-delay: 0.4s; font-size: var(--h3-size); color: var(--clay); font-weight: 600; line-height: 1.25;">The skill knows what I like.<br>It doesn't know who I am.</p>
         <p class="reveal text-muted" style="font-size: var(--small-size); transition-delay: 0.5s;">Seven rules, five categories, zero facts about me. You can read it, fork it, and disagree with it. The agent doesn't rediscover; it inherits.</p>
       </div>
