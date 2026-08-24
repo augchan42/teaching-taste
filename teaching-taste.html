@@ -1665,26 +1665,26 @@ above a gorge filled with morning mist. Chinese ink painting."</div>
   <div class="accent-bar"></div>
   <div class="slide-content">
     <h2 class="reveal">Running It 4,096 Times</h2>
-    <p class="reveal text-muted" style="margin-bottom: clamp(0.5rem, 1.5vh, 1rem);">Nobody eyeballs four thousand images — and the worst failures don't look like failures.</p>
+    <p class="reveal text-muted" style="margin-bottom: clamp(0.5rem, 1.5vh, 1rem);">Nobody eyeballs four thousand images.</p>
     <div class="reveal" style="display: flex; gap: clamp(1rem, 2.5vw, 2.5rem); margin-top: clamp(0.4rem, 1.2vh, 0.9rem);">
       <div style="flex: 1; border-left: 3px solid var(--clay); padding-left: clamp(0.6rem, 1vw, 1rem);">
         <div class="stat-number">52</div>
         <div class="stat-label" style="margin-bottom: clamp(0.4rem, 1vh, 0.7rem);">rejected outright</div>
-        <p class="text-muted" style="font-size: var(--small-size); line-height: 1.5;">The filter said no, loudly. The skill encodes substitutions — atmosphere and aftermath, never the act. <span class="text-clay" style="font-weight: 600;">The constraint forced better art.</span></p>
+        <p class="text-muted" style="font-size: var(--small-size); line-height: 1.5;">Content filters refused the prompt. The skill encodes substitutions — atmosphere and aftermath, never the act.</p>
       </div>
       <div style="flex: 1; border-left: 3px solid var(--gold); padding-left: clamp(0.6rem, 1vw, 1rem);">
         <div class="stat-number" style="color: var(--gold);">HTTP 200</div>
-        <div class="stat-label" style="margin-bottom: clamp(0.4rem, 1vh, 0.7rem);">the ones that said yes</div>
-        <p class="text-muted" style="font-size: var(--small-size); line-height: 1.5;">A reader found <span class="font-mono">14&ndash;31</span> rendering as a black square. Valid 1024&times;1024 WebP, correct header, 200 response. Only the pixels were wrong — the model refused, and the pipeline saved the refusal frame as art.</p>
+        <div class="stat-label" style="margin-bottom: clamp(0.4rem, 1vh, 0.7rem);">saved anyway</div>
+        <p class="text-muted" style="font-size: var(--small-size); line-height: 1.5;"><span class="font-mono">14&ndash;31</span> rendered as a black square. Valid 1024&times;1024 WebP, correct header, 200 response. The model refused; the pipeline wrote the refusal frame to disk. A reader found it.</p>
       </div>
       <div style="flex: 1; border-left: 3px solid var(--muted); padding-left: clamp(0.6rem, 1vw, 1rem);">
         <div class="stat-number" style="color: var(--muted); font-size: clamp(1.3rem, 2.6vw, 2.2rem);">entropy &lt; 2.0</div>
-        <div class="stat-label" style="margin-bottom: clamp(0.4rem, 1vh, 0.7rem);">the guard, at write time</div>
-        <p class="text-muted" style="font-size: var(--small-size); line-height: 1.5;">Shannon entropy over the histogram: a solid color scores exactly zero, real paintings score above four, and we reject below two. No pipeline may upload a near-uniform image.</p>
+        <div class="stat-label" style="margin-bottom: clamp(0.4rem, 1vh, 0.7rem);">rejected before upload</div>
+        <p class="text-muted" style="font-size: var(--small-size); line-height: 1.5;">Shannon entropy over the histogram. A solid color scores exactly zero, real paintings above four. Nothing near-uniform uploads.</p>
       </div>
     </div>
     <p class="reveal" style="transition-delay: 0.3s; font-size: var(--h3-size); color: var(--clay); font-weight: 600; margin-top: clamp(0.9rem, 2.2vh, 1.6rem);">The skill already had the rule. Those prompts predated it.</p>
-    <p class="reveal text-muted" style="transition-delay: 0.4s; font-size: var(--small-size); margin-top: clamp(0.2rem, 0.6vh, 0.4rem); max-width: 820px;">The verses that broke: naked and chasing a fox, two of people bound, one of a white tiger. Every one is a category the skill's Content Safety section already named. The images that failed are precisely the ones the encoded taste never got to write.</p>
+    <p class="reveal text-muted" style="transition-delay: 0.4s; font-size: var(--small-size); margin-top: clamp(0.2rem, 0.6vh, 0.4rem); max-width: 820px;">Naked and chasing a fox. Two of people bound. One of a white tiger. All are categories the skill's Content Safety section names.</p>
   </div>
   <div class="slide-number"></div>
 </section>
