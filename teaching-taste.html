@@ -32,6 +32,8 @@
   --body-size: clamp(1rem, 2.2vw, 1.75rem);
   --small-size: clamp(0.85rem, 1.6vw, 1.35rem);
   --code-size: clamp(0.85rem, 1.5vw, 1.2rem);
+  --code-size-sm: clamp(0.7rem, 1.15vw, 0.95rem);   /* dense code blocks */
+  --display-size: clamp(1.4rem, 3vw, 2.2rem);       /* gallery verse, lookup key */
 
   --slide-padding: clamp(1.5rem, 4vw, 4rem);
   --content-gap: clamp(0.75rem, 2vw, 2rem);
@@ -135,6 +137,11 @@ img, .image-container {
     height: auto !important;
     width: auto !important;
     max-width: 100% !important;
+  }
+  /* QR codes are wayfinding, not content — keep them thumb-sized */
+  .slide-content[style*="flex-direction: row"] img.qr-img {
+    width: clamp(96px, 26vw, 150px) !important;
+    max-height: none !important;
   }
   .slide-content[style*="flex-direction: row"] > div[role="img"] {
     min-height: 35vh !important;
@@ -822,7 +829,7 @@ body.edit-active [contenteditable] {
 }
 .pair-key code {
   font-family: var(--font-mono);
-  font-size: clamp(1.4rem, 3vw, 2.2rem);
+  font-size: var(--display-size);
   font-weight: 500;
   color: var(--clay);
 }
@@ -837,7 +844,7 @@ body.edit-active [contenteditable] {
 }
 .yilin-axis {
   font-family: var(--font-mono);
-  font-size: var(--body-size);
+  font-size: var(--small-size);
   color: var(--muted);
   letter-spacing: 0.04em;
 }
@@ -858,7 +865,7 @@ body.edit-active [contenteditable] {
 .yilin-tick {
   position: absolute;
   font-family: var(--font-mono);
-  font-size: clamp(1.15rem, 2.5vw, 1.85rem);
+  font-size: var(--body-size);
   font-weight: 600;
   color: var(--clay);
   line-height: 1;
@@ -876,7 +883,7 @@ body.edit-active [contenteditable] {
   transform: translate(calc(-100% - 0.4em), -50%);
 }
 .yilin-corner {
-  font-size: clamp(1rem, 2.1vw, 1.5rem);
+  font-size: var(--small-size);
   font-weight: 500;
   color: var(--foreground);
 }
@@ -1012,7 +1019,7 @@ body.edit-active [contenteditable] {
     </div>
     <div class="watkins-scrim" style="position: absolute; right: 0; bottom: 0; width: 50%; height: 42%; background: linear-gradient(to top, rgba(0,0,0,0.9), rgba(0,0,0,0.5) 45%, transparent); pointer-events: none;"></div>
     <div class="reveal watkins-caption" style="transition-delay: 0.3s; position: absolute; right: clamp(1.5rem, 4vw, 4rem); bottom: clamp(1.5rem, 5vh, 4rem); text-align: left; max-width: 42vw;">
-      <p style="font-family: var(--font-display); font-style: italic; color: #fff; font-size: clamp(1.3rem, 3vw, 2.6rem); line-height: 1.25; text-shadow: 0 2px 8px rgba(0,0,0,0.95), 0 4px 24px rgba(0,0,0,0.85); margin: 0;">Where I wandered, after I didn&rsquo;t find anything in the I-Ching section</p>
+      <p style="font-family: var(--font-display); font-style: italic; color: #fff; font-size: var(--h3-size); line-height: 1.25; text-shadow: 0 2px 8px rgba(0,0,0,0.95), 0 4px 24px rgba(0,0,0,0.85); margin: 0;">Where I wandered, after I didn&rsquo;t find anything in the I-Ching section</p>
     </div>
   </div>
 </section>
@@ -1025,16 +1032,23 @@ body.edit-active [contenteditable] {
       <img src="speaker-portrait.webp" alt="Augustin Chan" style="width: 100%; height: 100%; max-height: none; object-fit: cover; object-position: center 20%;">
     </div>
     <!-- Info — right side -->
-    <div style="flex: 1; display: flex; flex-direction: column; justify-content: flex-start; padding: var(--slide-padding); padding-top: clamp(3rem, 8vh, 6rem); padding-left: clamp(2rem, 4vw, 4rem); gap: clamp(0.5rem, 1.5vh, 1rem); position: relative;">
-      <h2 class="reveal" style="font-size: var(--title-size); margin-bottom: 0; border-left: 4px solid var(--clay); padding-left: clamp(0.5rem, 1vw, 1rem);">Augustin Chan</h2>
-      <p class="reveal" style="font-size: var(--h3-size); color: var(--clay); font-weight: 600; line-height: 1.3;">How do we build AI that expands what people can do — without quietly taking away their judgment?</p>
-      <p class="reveal text-muted" style="font-size: var(--body-size);">Culture, Research, Surgical Software — three answers to that one question.</p>
-      <p class="reveal" style="font-size: var(--h3-size); line-height: 1.6;"><strong>sixlines.online</strong> &mdash; the app behind this talk</p>
-      <p class="reveal" style="font-size: var(--h3-size); line-height: 1.6;">Co-host, <strong>hongkongaipodcast.com</strong></p>
-      <p class="reveal" style="font-size: var(--h3-size); line-height: 1.6;">Writing at <strong>augustinchan.dev</strong></p>
-      <div class="reveal" style="transition-delay: 0.4s; position: absolute; bottom: clamp(1.5rem, 4vh, 3rem); right: clamp(1.5rem, 4vw, 3rem); text-align: center;">
-        <img src="qr-linktree.png" alt="linktr.ee/augchan42 QR" style="width: clamp(140px, 18vw, 240px); border-radius: clamp(4px, 0.5vw, 8px);">
-        <p class="font-mono" style="font-size: var(--body-size); color: var(--muted); margin-top: 0.3em;">linktr.ee/augchan42</p>
+    <div style="flex: 1; display: flex; flex-direction: column; justify-content: center; padding: var(--slide-padding); padding-left: clamp(2rem, 4vw, 4rem); gap: clamp(1.5rem, 5vh, 3.5rem);">
+      <!-- Who, and the one question -->
+      <div style="display: flex; flex-direction: column; gap: clamp(0.4rem, 1.2vh, 0.8rem);">
+        <h2 class="reveal" style="font-size: var(--title-size); margin-bottom: 0; border-left: 4px solid var(--clay); padding-left: clamp(0.5rem, 1vw, 1rem);">Augustin Chan</h2>
+        <p class="reveal" style="font-size: var(--display-size); color: var(--clay); font-weight: 600; line-height: 1.3; max-width: 19em;">How do we build AI that expands what people can do — without quietly taking away their judgment?</p>
+        <p class="reveal text-muted" style="font-size: var(--body-size); max-width: 24em;">Culture, Research, Surgical Software — three answers to that one question.</p>
+      </div>
+      <!-- Where to find things — paired with the QR that carries them -->
+      <div class="reveal" style="transition-delay: 0.4s; display: flex; align-items: flex-end; justify-content: space-between; gap: clamp(1rem, 3vw, 2.5rem);">
+        <div style="display: flex; flex-direction: column; gap: clamp(0.25rem, 0.8vh, 0.5rem);">
+          <p style="font-size: var(--body-size); line-height: 1.4;"><strong>sixlines.online</strong> &mdash; the app behind this talk</p>
+          <p class="text-muted" style="font-size: var(--small-size); line-height: 1.5;">Co-host, <strong>hongkongaipodcast.com</strong><br>Connect on <strong>LinkedIn</strong></p>
+        </div>
+        <div style="flex: 0 0 auto; text-align: center;">
+          <img class="qr-img" src="qr-linktree.png" alt="linktr.ee/augchan42 QR" style="width: clamp(110px, 15vw, 190px); border-radius: clamp(4px, 0.5vw, 8px);">
+          <p class="font-mono" style="font-size: var(--small-size); color: var(--muted); margin-top: 0.3em;">linktr.ee/augchan42</p>
+        </div>
       </div>
     </div>
   </div>
@@ -1146,11 +1160,11 @@ body.edit-active [contenteditable] {
       </div>
       <div style="display: flex; flex-direction: column; color: var(--muted); gap: clamp(0.5rem, 1.5vh, 1.2rem);">
         <div style="display: flex; align-items: baseline; gap: clamp(0.4rem, 0.8vw, 0.8rem);">
-          <span style="font-family: var(--font-cjk); font-size: clamp(1.8rem, 4vw, 3.5rem); color: var(--foreground);">艮</span>
+          <span style="font-family: var(--font-cjk); font-size: var(--h2-size); color: var(--foreground);">艮</span>
           <span style="font-size: var(--body-size); font-family: var(--font-body);">Mountain</span>
         </div>
         <div style="display: flex; align-items: baseline; gap: clamp(0.4rem, 0.8vw, 0.8rem);">
-          <span style="font-family: var(--font-cjk); font-size: clamp(1.8rem, 4vw, 3.5rem); color: var(--foreground);">坎</span>
+          <span style="font-family: var(--font-cjk); font-size: var(--h2-size); color: var(--foreground);">坎</span>
           <span style="font-size: var(--body-size); font-family: var(--font-body);">Water</span>
         </div>
       </div>
@@ -1314,7 +1328,7 @@ body.edit-active [contenteditable] {
         <div style="position: absolute; left: 1.5px; top: 0; transform: translate(-50%, -100%); width: 0; height: 0; border-left: clamp(7px, 1vw, 11px) solid transparent; border-right: clamp(7px, 1vw, 11px) solid transparent; border-bottom: clamp(9px, 1.2vw, 14px) solid var(--clay);"></div>
       </div>
     </div>
-    <p class="reveal" style="font-size: var(--h2-size); color: var(--clay); font-weight: 600; margin-top: clamp(1.5rem, 4vh, 3rem);">Re-run. Judge again. Repeat.</p>
+    <p class="reveal" style="font-size: var(--h3-size); color: var(--clay); font-weight: 600; margin-top: clamp(1.5rem, 4vh, 3rem);">Re-run. Judge again. Repeat.</p>
     <p class="reveal text-muted" style="font-size: var(--body-size); margin-top: clamp(0.5rem, 1.5vh, 1rem); max-width: 800px;">You can't reason about the model. You can only judge its output.</p>
   </div>
   <div class="slide-number"></div>
@@ -1411,7 +1425,7 @@ above a gorge filled with morning mist. Chinese ink painting."</div>
       <p class="reveal text-muted" style="font-size: var(--small-size); margin-top: clamp(0.4rem, 1vh, 0.8rem);">key 48-59 &middot; <span class="font-cjk">井 &rarr; 渙</span> &middot; ink-landscape &middot; fal-ai/z-image/turbo</p>
     </div>
     <div class="reveal" style="transition-delay: 0.3s; flex: 0 0 clamp(340px, 42vw, 620px); align-self: stretch; display: flex; align-items: center; background: var(--tone); border-left: 3px solid var(--border); padding: clamp(1.5rem, 3vh, 2.5rem) clamp(1.5rem, 3vw, 2.5rem);">
-      <p style="font-size: clamp(1.15rem, 2.4vw, 1.75rem); line-height: 1.5; color: var(--foreground); font-family: var(--font-body); font-weight: 300;">An overflowing well sends water spilling in four branching streams across barren hillside, carving shallow channels in the earth. <strong style="color: var(--clay);">Foreground</strong>, the well mouth brims over, water sheeting across worn stone. <strong style="color: var(--clay);">Midground</strong>, the streams diverge eastward, spreading thin over sun-baked ground, nourishing sparse grasses. <strong style="color: var(--clay);">Beyond</strong>, desolate brown hills roll to a hazy horizon, the water lost among them. Amber reflections glint where the shallow streams catch the last daylight. <span style="color: var(--clay); font-weight: 600;">Chinese ink painting.</span></p>
+      <p style="font-size: var(--body-size); line-height: 1.5; color: var(--foreground); font-family: var(--font-body); font-weight: 300;">An overflowing well sends water spilling in four branching streams across barren hillside, carving shallow channels in the earth. <strong style="color: var(--clay);">Foreground</strong>, the well mouth brims over, water sheeting across worn stone. <strong style="color: var(--clay);">Midground</strong>, the streams diverge eastward, spreading thin over sun-baked ground, nourishing sparse grasses. <strong style="color: var(--clay);">Beyond</strong>, desolate brown hills roll to a hazy horizon, the water lost among them. Amber reflections glint where the shallow streams catch the last daylight. <span style="color: var(--clay); font-weight: 600;">Chinese ink painting.</span></p>
     </div>
   </div>
   <div class="slide-number"></div>
@@ -1461,50 +1475,50 @@ above a gorge filled with morning mist. Chinese ink painting."</div>
       <p class="reveal text-muted" style="font-size: var(--body-size); margin-bottom: clamp(1rem, 2.5vh, 2rem);">The AI distilled these from human preferences:</p>
       <h3 class="reveal" style="font-size: var(--h3-size); color: var(--clay); margin-bottom: clamp(0.5rem, 1.2vh, 1rem);">7 Composition Rules</h3>
       <ol class="reveal" style="list-style: none; display: flex; flex-direction: column; gap: clamp(0.4rem, 1vh, 0.8rem); padding: 0;">
-        <li style="font-size: var(--h3-size); display: flex; gap: 0.5em;"><span class="text-clay" style="font-weight: 700;">1.</span> Frame the scene</li>
-        <li style="font-size: var(--h3-size); display: flex; gap: 0.5em;"><span class="text-clay" style="font-weight: 700;">2.</span> Force depth</li>
-        <li style="font-size: var(--h3-size); display: flex; gap: 0.5em;"><span class="text-clay" style="font-weight: 700;">3.</span> Demand contrast</li>
-        <li style="font-size: var(--h3-size); display: flex; gap: 0.5em;"><span class="text-clay" style="font-weight: 700;">4.</span> Warm accent</li>
-        <li style="font-size: var(--h3-size); display: flex; gap: 0.5em;"><span class="text-clay" style="font-weight: 700;">5.</span> Favor diagonals</li>
-        <li style="font-size: var(--h3-size); display: flex; gap: 0.5em;"><span class="text-clay" style="font-weight: 700;">6.</span> Discoverable detail</li>
-        <li style="font-size: var(--h3-size); display: flex; gap: 0.5em;"><span class="text-clay" style="font-weight: 700;">7.</span> Painterly language</li>
+        <li style="font-size: var(--body-size); display: flex; gap: 0.5em;"><span class="text-clay" style="font-weight: 700;">1.</span> Frame the scene</li>
+        <li style="font-size: var(--body-size); display: flex; gap: 0.5em;"><span class="text-clay" style="font-weight: 700;">2.</span> Force depth</li>
+        <li style="font-size: var(--body-size); display: flex; gap: 0.5em;"><span class="text-clay" style="font-weight: 700;">3.</span> Demand contrast</li>
+        <li style="font-size: var(--body-size); display: flex; gap: 0.5em;"><span class="text-clay" style="font-weight: 700;">4.</span> Warm accent</li>
+        <li style="font-size: var(--body-size); display: flex; gap: 0.5em;"><span class="text-clay" style="font-weight: 700;">5.</span> Favor diagonals</li>
+        <li style="font-size: var(--body-size); display: flex; gap: 0.5em;"><span class="text-clay" style="font-weight: 700;">6.</span> Discoverable detail</li>
+        <li style="font-size: var(--body-size); display: flex; gap: 0.5em;"><span class="text-clay" style="font-weight: 700;">7.</span> Painterly language</li>
       </ol>
       <p class="reveal text-muted" style="font-size: var(--small-size); line-height: 1.45; margin-top: clamp(0.6rem, 1.5vh, 1.2rem); max-width: 44em;">Plus a disambiguation table. Write <span class="font-mono" style="font-size: 1em;">crane bird</span> &mdash; plain <span class="font-mono" style="font-size: 1em;">crane</span> renders a machine.</p>
     </div>
     <div class="reveal" style="transition-delay: 0.2s; flex: 0 0 clamp(250px, 30vw, 420px); align-self: stretch; display: flex; flex-direction: column; justify-content: center; gap: clamp(0.4rem, 1.1vh, 0.9rem); padding: var(--slide-padding) clamp(1rem, 2.5vw, 2.5rem);">
-      <h3 style="font-size: var(--h3-size); color: var(--gold); margin-bottom: clamp(0.1rem, 0.4vh, 0.3rem);">5 Style Categories</h3>
+      <h3 style="font-size: var(--h3-size); color: var(--clay); margin-bottom: clamp(0.1rem, 0.4vh, 0.3rem);">5 Style Categories</h3>
       <div style="display: flex; align-items: flex-start; gap: 0.6em;">
         <span style="display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: #2a2a3a; flex: 0 0 auto; margin-top: 0.5em;"></span>
         <div>
-          <p class="font-mono" style="font-size: var(--body-size); line-height: 1.3;">atmospheric-night</p>
+          <p class="font-mono" style="font-size: var(--small-size); font-weight: 500; line-height: 1.35;">atmospheric-night</p>
           <p class="text-muted" style="font-size: var(--small-size); line-height: 1.3;">darkness, isolation, winter, grief</p>
         </div>
       </div>
       <div style="display: flex; align-items: flex-start; gap: 0.6em;">
         <span style="display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: #5a7a5a; flex: 0 0 auto; margin-top: 0.5em;"></span>
         <div>
-          <p class="font-mono" style="font-size: var(--body-size); line-height: 1.3;">ink-landscape</p>
+          <p class="font-mono" style="font-size: var(--small-size); font-weight: 500; line-height: 1.35;">ink-landscape</p>
           <p class="text-muted" style="font-size: var(--small-size); line-height: 1.3;">nature, water, seasons, travel</p>
         </div>
       </div>
       <div style="display: flex; align-items: flex-start; gap: 0.6em;">
         <span style="display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: #8a7aa0; flex: 0 0 auto; margin-top: 0.5em;"></span>
         <div>
-          <p class="font-mono" style="font-size: var(--body-size); line-height: 1.3;">figures-in-mist</p>
+          <p class="font-mono" style="font-size: var(--small-size); font-weight: 500; line-height: 1.35;">figures-in-mist</p>
           <p class="text-muted" style="font-size: var(--small-size); line-height: 1.3;">narrative, ceremony, human emotion</p>
         </div>
       </div>
       <div style="display: flex; align-items: flex-start; gap: 0.6em;">
         <span style="display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: #b87a3a; flex: 0 0 auto; margin-top: 0.5em;"></span>
         <div>
-          <p class="font-mono" style="font-size: var(--body-size); line-height: 1.3;">bold-action</p>
+          <p class="font-mono" style="font-size: var(--small-size); font-weight: 500; line-height: 1.35;">bold-action</p>
           <p class="text-muted" style="font-size: var(--small-size); line-height: 1.3;">animals, combat, storms, struggle</p>
         </div>
       </div>
       <div style="display: flex; align-items: flex-start; gap: 0.6em;">
         <span style="display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: #1a2a4a; flex: 0 0 auto; margin-top: 0.5em;"></span>
         <div>
-          <p class="font-mono" style="font-size: var(--body-size); line-height: 1.3;">cosmic-night</p>
+          <p class="font-mono" style="font-size: var(--small-size); font-weight: 500; line-height: 1.35;">cosmic-night</p>
           <p class="text-muted" style="font-size: var(--small-size); line-height: 1.3;">stars, heaven, myth, immortals</p>
         </div>
       </div>
@@ -1526,7 +1540,7 @@ above a gorge filled with morning mist. Chinese ink painting."</div>
         <span style="display: inline-block; width: 14px; height: 14px; border-radius: 50%; background: #2a2a3a; border: 2px solid rgba(255,255,255,0.3);"></span>
         <span style="font-size: var(--h2-size); color: rgba(255,255,255,0.85); font-family: var(--font-display); font-weight: 600;">atmospheric-night</span>
       </div>
-      <p style="font-size: clamp(1.4rem, 3vw, 2.2rem); color: rgba(255,255,255,0.9); font-family: var(--font-cjk); line-height: 1.8; margin: 0;">明滅光息，不能復食<br>精魄既喪，以夜為室</p>
+      <p style="font-size: var(--display-size); color: rgba(255,255,255,0.9); font-family: var(--font-cjk); line-height: 1.8; margin: 0;">明滅光息，不能復食<br>精魄既喪，以夜為室</p>
       <p style="font-size: var(--body-size); color: rgba(255,255,255,0.5); margin: 0; font-style: italic;">Light dims, radiance dies. Night becomes one's dwelling.</p>
       <span style="font-size: var(--small-size); color: rgba(255,255,255,0.25); font-family: var(--font-mono);">噬嗑 → 頤 &middot; hexagram 21 → 27</span>
     </div>
@@ -1544,7 +1558,7 @@ above a gorge filled with morning mist. Chinese ink painting."</div>
         <span style="display: inline-block; width: 14px; height: 14px; border-radius: 50%; background: #5a7a5a; border: 2px solid rgba(255,255,255,0.3);"></span>
         <span style="font-size: var(--h2-size); color: rgba(255,255,255,0.85); font-family: var(--font-display); font-weight: 600;">ink-landscape</span>
       </div>
-      <p style="font-size: clamp(1.4rem, 3vw, 2.2rem); color: rgba(255,255,255,0.9); font-family: var(--font-cjk); line-height: 1.8; margin: 0;">禹鑿龍門，通利水源<br>東注滄海，民得安存</p>
+      <p style="font-size: var(--display-size); color: rgba(255,255,255,0.9); font-family: var(--font-cjk); line-height: 1.8; margin: 0;">禹鑿龍門，通利水源<br>東注滄海，民得安存</p>
       <p style="font-size: var(--body-size); color: rgba(255,255,255,0.5); margin: 0; font-style: italic;">Yu carved Dragon Gate and opened the water's source.<br>Flowing east to the vast sea, the people found safe dwelling.</p>
       <span style="font-size: var(--small-size); color: rgba(255,255,255,0.25); font-family: var(--font-mono);">乾 → 豫 &middot; hexagram 1 → 16</span>
     </div>
@@ -1562,7 +1576,7 @@ above a gorge filled with morning mist. Chinese ink painting."</div>
         <span style="display: inline-block; width: 14px; height: 14px; border-radius: 50%; background: #8a7aa0; border: 2px solid rgba(255,255,255,0.3);"></span>
         <span style="font-size: var(--h2-size); color: rgba(255,255,255,0.85); font-family: var(--font-display); font-weight: 600;">figures-in-mist</span>
       </div>
-      <p style="font-size: clamp(1.4rem, 3vw, 2.2rem); color: rgba(255,255,255,0.9); font-family: var(--font-cjk); line-height: 1.8; margin: 0;">雨師娶婦，黃岩季子<br>成禮既婚，相呼面南<br>膏澤應時，年豐大喜</p>
+      <p style="font-size: var(--display-size); color: rgba(255,255,255,0.9); font-family: var(--font-cjk); line-height: 1.8; margin: 0;">雨師娶婦，黃岩季子<br>成禮既婚，相呼面南<br>膏澤應時，年豐大喜</p>
       <p style="font-size: var(--body-size); color: rgba(255,255,255,0.5); margin: 0; font-style: italic;">The Rain Master takes a bride — the youngest daughter of Huangyan.<br>Rites completed, they turn to face south.<br>Timely rain and rich moisture; a bountiful year, great rejoicing.</p>
       <span style="font-size: var(--small-size); color: rgba(255,255,255,0.25); font-family: var(--font-mono);">損 → 益 &middot; hexagram 41 → 42</span>
     </div>
@@ -1580,7 +1594,7 @@ above a gorge filled with morning mist. Chinese ink painting."</div>
         <span style="display: inline-block; width: 14px; height: 14px; border-radius: 50%; background: #b87a3a; border: 2px solid rgba(255,255,255,0.3);"></span>
         <span style="font-size: var(--h2-size); color: rgba(255,255,255,0.85); font-family: var(--font-display); font-weight: 600;">bold-action</span>
       </div>
-      <p style="font-size: clamp(1.4rem, 3vw, 2.2rem); color: rgba(255,255,255,0.9); font-family: var(--font-cjk); line-height: 1.8; margin: 0;">白龍黑虎，起伏俱怒<br>蚩尤敗走，死於魯首</p>
+      <p style="font-size: var(--display-size); color: rgba(255,255,255,0.9); font-family: var(--font-cjk); line-height: 1.8; margin: 0;">白龍黑虎，起伏俱怒<br>蚩尤敗走，死於魯首</p>
       <p style="font-size: var(--body-size); color: rgba(255,255,255,0.5); margin: 0; font-style: italic;">White dragon and black tiger rise in shared fury.<br>Chi You flees in defeat, slain at Lu Shou.</p>
       <span style="font-size: var(--small-size); color: rgba(255,255,255,0.25); font-family: var(--font-mono);">益 → 比 &middot; hexagram 42 → 8</span>
     </div>
@@ -1598,7 +1612,7 @@ above a gorge filled with morning mist. Chinese ink painting."</div>
         <span style="display: inline-block; width: 14px; height: 14px; border-radius: 50%; background: #1a2a4a; border: 2px solid rgba(255,255,255,0.3);"></span>
         <span style="font-size: var(--h2-size); color: rgba(255,255,255,0.85); font-family: var(--font-display); font-weight: 600;">cosmic-night</span>
       </div>
-      <p style="font-size: clamp(1.4rem, 3vw, 2.2rem); color: rgba(255,255,255,0.9); font-family: var(--font-cjk); line-height: 1.8; margin: 0;">龍生馬淵，壽考且神<br>飛騰上天，舍宿軒轅</p>
+      <p style="font-size: var(--display-size); color: rgba(255,255,255,0.9); font-family: var(--font-cjk); line-height: 1.8; margin: 0;">龍生馬淵，壽考且神<br>飛騰上天，舍宿軒轅</p>
       <p style="font-size: var(--body-size); color: rgba(255,255,255,0.5); margin: 0; font-style: italic;">The dragon born in the deep pool, long-lived and divine.<br>Flying upward to heaven, dwelling among the stars of Xuanyuan.</p>
       <span style="font-size: var(--small-size); color: rgba(255,255,255,0.25); font-family: var(--font-mono);">未濟 → 歸妹 &middot; hexagram 64 → 54</span>
     </div>
@@ -1680,7 +1694,7 @@ above a gorge filled with morning mist. Chinese ink painting."</div>
         <p class="text-muted" style="font-size: var(--small-size); line-height: 1.5;"><span class="font-mono">14&ndash;31</span> rendered as a black square. Valid 1024&times;1024 WebP, correct header, 200 response. The model refused; the pipeline wrote the refusal frame to disk. A reader found it.</p>
       </div>
       <div style="flex: 1; border-left: 3px solid var(--muted); padding-left: clamp(0.6rem, 1vw, 1rem);">
-        <div class="stat-number" style="color: var(--muted); font-size: clamp(1.3rem, 2.6vw, 2.2rem);">entropy &lt; 2.0</div>
+        <div class="stat-number" style="color: var(--muted);">entropy &lt; 2.0</div>
         <div class="stat-label" style="margin-bottom: clamp(0.4rem, 1vh, 0.7rem);">rejected before upload</div>
         <p class="text-muted" style="font-size: var(--small-size); line-height: 1.5;">Shannon entropy over the histogram. A solid color scores exactly zero, real paintings above four. Nothing near-uniform uploads.</p>
       </div>
@@ -1710,7 +1724,7 @@ above a gorge filled with morning mist. Chinese ink painting."</div>
       <div style="display: flex; flex-direction: column; gap: clamp(0.5rem, 1.2vh, 0.8rem);">
         <div style="border-left: 3px solid var(--gold); padding-left: clamp(0.6rem, 1vw, 1rem);">
           <p style="font-size: var(--small-size); font-weight: 600; color: var(--gold); margin-bottom: 0.3em;">What the skill tells the agent</p>
-          <div class="code-block" style="font-size: clamp(0.7rem, 1.2vw, 0.95rem); padding: clamp(0.3rem, 0.8vw, 0.6rem); line-height: 1.5;"><span class="comment"># Style table fallback for abstract verses:</span>
+          <div class="code-block" style="font-size: var(--code-size-sm); padding: clamp(0.3rem, 0.8vw, 0.6rem); line-height: 1.5;"><span class="comment"># Style table fallback for abstract verses:</span>
 If abstract, choose by <span class="accent">tone</span>:
   ominous    &rarr; atmospheric-night
   <span class="accent">auspicious &rarr; ink-landscape / figures-in-mist</span>
@@ -1736,7 +1750,7 @@ If abstract, choose by <span class="accent">tone</span>:
   <div class="slide-content">
     <h2 class="reveal">What Is a Skill?</h2>
     <div class="two-col" style="margin-top: clamp(0.5rem, 1.5vh, 1rem);">
-    <div class="code-block reveal" style="transition-delay: 0.2s; font-size: clamp(0.7rem, 1.05vw, 0.95rem);">---
+    <div class="code-block reveal" style="transition-delay: 0.2s; font-size: var(--code-size-sm);">---
 name: verse-to-prompt
 description: Convert classical Chinese verses into ink painting
   image generation prompts.
@@ -1785,7 +1799,7 @@ Given a verse, produce:
         <p class="text-muted" style="font-size: var(--small-size);">You say "this one." The AI figures out why it works and writes the rule down — where you can check it.</p>
       </div>
     </div>
-    <p class="reveal" style="transition-delay: 0.35s; font-size: var(--h2-size); color: var(--clay); font-weight: 600; margin-top: clamp(1rem, 2.5vh, 1.8rem);">Encode the preference, not the person.</p>
+    <p class="reveal" style="transition-delay: 0.35s; font-size: var(--h3-size); color: var(--clay); font-weight: 600; margin-top: clamp(1rem, 2.5vh, 1.8rem);">Encode the preference, not the person.</p>
     <p class="reveal text-muted" style="transition-delay: 0.45s; font-size: var(--small-size); margin-top: clamp(0.3rem, 0.8vh, 0.5rem); max-width: 700px;">A bookshop that only knew what I told it. A file that only knows what I told it.</p>
   </div>
   <div class="slide-number"></div>
