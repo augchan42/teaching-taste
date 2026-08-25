@@ -18,8 +18,12 @@ WORK="$(mktemp -d)"
 trap 'rm -rf "$WORK"' EXIT
 
 CHROME="$(command -v google-chrome || command -v google-chrome-stable || command -v chromium || true)"
+MAC_CHROME="/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
+if [ -z "$CHROME" ] && [ -x "$MAC_CHROME" ]; then
+  CHROME="$MAC_CHROME"
+fi
 if [ -z "$CHROME" ]; then
-  echo "Need Chrome or Chromium on PATH." >&2
+  echo "Need Chrome or Chromium on PATH (or installed in /Applications on macOS)." >&2
   exit 1
 fi
 
@@ -51,7 +55,8 @@ print(f"  {len(swapped)} images")
 PY
 
 echo "Printing…"
-"$CHROME" --headless=new --disable-gpu --no-sandbox \
+"$CHROME" --headless=new --disable-gpu \
+  --user-data-dir="$WORK/chrome-profile" \
   --run-all-compositor-stages-before-draw \
   --virtual-time-budget=20000 \
   --no-pdf-header-footer \
