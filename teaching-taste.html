@@ -90,29 +90,48 @@ img, .image-container {
   gap: clamp(0.5rem, 1.5vw, 1rem);
 }
 
+/* Short viewports shrink the WHOLE ladder. Redefining only title and h2 here
+   left h3 and body at desktop size, so every h3 outranked its own h2. */
 @media (max-height: 700px) {
   :root {
     --slide-padding: clamp(0.75rem, 3vw, 2rem);
     --content-gap: clamp(0.4rem, 1.5vw, 1rem);
-    --title-size: clamp(1.5rem, 4.5vw, 2.8rem);
-    --h2-size: clamp(1.1rem, 3vw, 2rem);
+    --title-size: clamp(1.5rem, 4.5vw, 3.4rem);
+    --h2-size: clamp(1.15rem, 3.2vw, 2.6rem);
+    --h3-size: clamp(1rem, 2.3vw, 1.9rem);
+    --display-size: clamp(0.95rem, 2vw, 1.7rem);
+    --body-size: clamp(0.85rem, 1.65vw, 1.35rem);
+    --small-size: clamp(0.72rem, 1.25vw, 1.05rem);
+    --code-size: clamp(0.68rem, 1.1vw, 0.95rem);
+    --code-size-sm: clamp(0.58rem, 0.9vw, 0.8rem);
   }
 }
 @media (max-height: 600px) {
   :root {
     --slide-padding: clamp(0.5rem, 2.5vw, 1.5rem);
     --content-gap: clamp(0.3rem, 1vw, 0.75rem);
-    --title-size: clamp(1.2rem, 4vw, 2.2rem);
-    --body-size: clamp(0.7rem, 1.2vw, 0.95rem);
+    --title-size: clamp(1.2rem, 4vw, 2.8rem);
+    --h2-size: clamp(1rem, 2.8vw, 2.1rem);
+    --h3-size: clamp(0.9rem, 2vw, 1.5rem);
+    --display-size: clamp(0.85rem, 1.75vw, 1.35rem);
+    --body-size: clamp(0.75rem, 1.4vw, 1.1rem);
+    --small-size: clamp(0.65rem, 1.1vw, 0.85rem);
+    --code-size: clamp(0.6rem, 0.95vw, 0.78rem);
+    --code-size-sm: clamp(0.52rem, 0.8vw, 0.65rem);
   }
   .nav-dots, .keyboard-hint, .decorative { display: none; }
 }
 @media (max-height: 500px) {
   :root {
     --slide-padding: clamp(0.4rem, 2vw, 1rem);
-    --title-size: clamp(1rem, 3.5vw, 1.8rem);
-    --h2-size: clamp(0.9rem, 2.5vw, 1.4rem);
-    --body-size: clamp(0.65rem, 1vw, 0.85rem);
+    --title-size: clamp(1rem, 3.5vw, 2.2rem);
+    --h2-size: clamp(0.9rem, 2.5vw, 1.6rem);
+    --h3-size: clamp(0.8rem, 1.8vw, 1.15rem);
+    --display-size: clamp(0.75rem, 1.6vw, 1.05rem);
+    --body-size: clamp(0.68rem, 1.15vw, 0.85rem);
+    --small-size: clamp(0.6rem, 0.9vw, 0.7rem);
+    --code-size: clamp(0.55rem, 0.8vw, 0.62rem);
+    --code-size-sm: clamp(0.48rem, 0.7vw, 0.55rem);
   }
 }
 @media (max-width: 600px) {
@@ -1769,9 +1788,13 @@ Given a verse, produce:
 ...</div>
       <div style="display: flex; flex-direction: column; gap: clamp(0.6rem, 1.8vh, 1.4rem);">
         <p class="reveal" style="transition-delay: 0.3s;">A <strong>SKILL.md</strong> file — YAML frontmatter plus instructions. No runtime code, no weights. Just text you can open and read.</p>
-        <p class="reveal font-mono" style="transition-delay: 0.35s; font-size: var(--small-size); color: var(--clay);">github.com/augchan42/inkstone</p>
-        <p class="reveal" style="transition-delay: 0.4s; font-size: var(--h3-size); color: var(--clay); font-weight: 600; line-height: 1.25;">The skill knows what I like.<br>It doesn't know who I am.</p>
-        <p class="reveal text-muted" style="font-size: var(--small-size); transition-delay: 0.5s;">Seven rules, five categories, zero facts about me. You can read it, fork it, and disagree with it. The agent doesn't rediscover; it inherits.</p>
+        <p class="reveal" style="transition-delay: 0.35s;">Skills ship inside <strong>plugins</strong>. You install the plugin; its skills come with it.</p>
+        <div class="reveal font-mono" style="transition-delay: 0.4s; font-size: var(--small-size); line-height: 1.7; color: var(--muted); white-space: pre;">inkstone/<span style="font-family: var(--font-body);">&nbsp;&nbsp;the plugin</span>
+&#9500;&#9472;&nbsp;<span class="text-clay">verse-to-prompt</span><span style="font-family: var(--font-body);">&nbsp;&nbsp;this one</span>
+&#9500;&#9472;&nbsp;image-to-scene
+&#9500;&#9472;&nbsp;create-explanation
+&#9492;&#9472;&nbsp;&hellip;</div>
+        <p class="reveal font-mono" style="transition-delay: 0.45s; font-size: var(--small-size); color: var(--clay);">github.com/augchan42/inkstone</p>
       </div>
     </div>
   </div>
@@ -1784,23 +1807,23 @@ Given a verse, produce:
   <div class="ink-wash-bl"></div>
   <div class="accent-bar"></div>
   <div class="slide-content centered">
-    <h2 class="reveal">Takeaways</h2>
+    <h2 class="reveal" style="width: 100%; max-width: 700px; margin: 0 auto var(--content-gap); text-align: left; font-size: var(--title-size);">Takeaways</h2>
     <div style="max-width: 700px; text-align: left; margin: 0 auto; display: flex; flex-direction: column; gap: clamp(0.6rem, 1.5vh, 1.2rem);">
       <div class="reveal" style="border-left: 3px solid var(--clay); padding-left: clamp(0.6rem, 1vw, 1rem);">
-        <h3>Style is not a suffix</h3>
+        <h3 style="font-size: var(--display-size);">Style is not a suffix</h3>
         <p class="text-muted" style="font-size: var(--small-size);">Language register controls the medium. Painterly words produce paintings; appending "ink painting style" produces a filter.</p>
       </div>
       <div class="reveal" style="border-left: 3px solid var(--gold); padding-left: clamp(0.6rem, 1vw, 1rem);">
-        <h3>Taste is iterative, not declarative</h3>
+        <h3 style="font-size: var(--display-size);">Taste is iterative, not declarative</h3>
         <p class="text-muted" style="font-size: var(--small-size);">You can't define good output upfront. It emerges through cycles of human judgment and AI analysis.</p>
       </div>
       <div class="reveal" style="border-left: 3px solid var(--muted); padding-left: clamp(0.6rem, 1vw, 1rem);">
-        <h3>Humans judge; the AI articulates</h3>
+        <h3 style="font-size: var(--display-size);">Humans judge; the AI articulates</h3>
         <p class="text-muted" style="font-size: var(--small-size);">You say "this one." The AI figures out why it works and writes the rule down — where you can check it.</p>
       </div>
     </div>
-    <p class="reveal" style="transition-delay: 0.35s; font-size: var(--h3-size); color: var(--clay); font-weight: 600; margin-top: clamp(1rem, 2.5vh, 1.8rem);">Encode the preference, not the person.</p>
-    <p class="reveal text-muted" style="transition-delay: 0.45s; font-size: var(--small-size); margin-top: clamp(0.3rem, 0.8vh, 0.5rem); max-width: 700px;">A bookshop that only knew what I told it. A file that only knows what I told it.</p>
+    <p class="reveal" style="transition-delay: 0.35s; width: 100%; max-width: 700px; text-align: left; font-size: var(--h3-size); color: var(--clay); font-weight: 600; margin-top: clamp(1rem, 2.5vh, 1.8rem);">Encode the preference, not the person.</p>
+    <p class="reveal text-muted" style="transition-delay: 0.45s; width: 100%; max-width: 700px; text-align: left; font-size: var(--small-size); margin-top: clamp(0.3rem, 0.8vh, 0.5rem);">A bookshop that only knew what I told it. A file that only knows what I told it.</p>
   </div>
   <div class="slide-number"></div>
 </section>
