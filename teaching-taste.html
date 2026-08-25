@@ -206,14 +206,17 @@
   --font-cjk: 'Noto Serif TC', serif;
   --font-mono: 'JetBrains Mono', monospace;
 
-  --title-size: clamp(2.2rem, 6vw, 5rem);
-  --h2-size: clamp(1.8rem, 4.5vw, 3.5rem);
-  --h3-size: clamp(1.3rem, 3vw, 2.5rem);
-  --body-size: clamp(1rem, 2.2vw, 1.75rem);
-  --small-size: clamp(0.85rem, 1.6vw, 1.35rem);
-  --code-size: clamp(0.85rem, 1.5vw, 1.2rem);
-  --code-size-sm: clamp(0.7rem, 1.15vw, 0.95rem);   /* dense code blocks */
-  --display-size: clamp(1.4rem, 3vw, 2.2rem);       /* gallery verse, lookup key */
+  /* On a projector every size below pins to its clamp() MAX, not the vw term --
+     a bigger screen buys nothing. These maxima are sized for the back row of a
+     ~40-person room: body >= 3% of a 1080p frame, dense code >= 1.8%. */
+  --title-size: clamp(2.2rem, 6vw, 6rem);
+  --h2-size: clamp(1.8rem, 4.5vw, 4.25rem);
+  --h3-size: clamp(1.3rem, 3vw, 3rem);
+  --body-size: clamp(1rem, 2.2vw, 2.25rem);
+  --small-size: clamp(0.85rem, 1.6vw, 1.7rem);
+  --code-size: clamp(0.85rem, 1.5vw, 1.55rem);
+  --code-size-sm: clamp(0.7rem, 1.15vw, 1.25rem);   /* dense code blocks */
+  --display-size: clamp(1.4rem, 3vw, 2.7rem);       /* gallery verse, lookup key */
 
   --slide-padding: clamp(1.5rem, 4vw, 4rem);
   --content-gap: clamp(0.75rem, 2vw, 2rem);
@@ -232,7 +235,23 @@
    VIEWPORT FITTING: MANDATORY BASE STYLES
    =========================================== */
 html, body { height: 100%; overflow-x: hidden; }
-html { scroll-snap-type: y mandatory; scroll-behavior: smooth; }
+html {
+  scroll-snap-type: y mandatory; scroll-behavior: smooth;
+  /* Live font scale for the room. Every clamp() min/max in this deck is in rem,
+     and on a projector it's the max that binds -- so scaling the root font size
+     scales exactly the terms that matter. +/- adjust, 0 resets. */
+  font-size: calc(100% * var(--fs, 1));
+}
+
+/* Transient "text 110%" readout when the scale changes. */
+.fs-toast {
+  position: fixed; bottom: 1.5rem; right: 1.5rem; z-index: 9999;
+  padding: 0.5rem 0.9rem; border-radius: 6px;
+  background: var(--ink); color: var(--paper);
+  font-family: var(--font-mono); font-size: 14px; letter-spacing: 0.02em;
+  opacity: 0; transition: opacity 0.2s ease; pointer-events: none;
+}
+.fs-toast.show { opacity: 0.9; }
 
 .slide {
   width: 100vw; height: 100vh; height: 100dvh;
@@ -555,7 +574,7 @@ p, li {
   .reveal-stamp { transform: rotate(-3deg) !important; }
 
   /* Screen furniture */
-  .progress-bar, .nav-dots, .keyboard-hint, .edit-toggle, .edit-banner { display: none !important; }
+  .progress-bar, .nav-dots, .keyboard-hint, .edit-toggle, .edit-banner, .fs-toast { display: none !important; }
 
   /* The texture is noise at 1.25% effective opacity. On screen it gives the
      paper its tooth. On paper it is invisible, and it forces a full-page
@@ -589,7 +608,7 @@ p, li {
   border-left: 3px solid var(--clay);
   padding-left: clamp(0.8rem, 1.5vw, 1.2rem);
   font-family: var(--font-display);
-  font-size: clamp(1rem, 2vw, 1.5rem);
+  font-size: clamp(1rem, 2vw, 1.85rem);
   font-style: italic;
   color: var(--foreground);
   line-height: 1.5;
@@ -598,7 +617,7 @@ p, li {
 /* Venue-readable prompt slide (large room / projector) */
 .prompt-venue-hero {
   font-family: var(--font-display);
-  font-size: clamp(1.45rem, 3.8vw, 2.65rem);
+  font-size: clamp(1.45rem, 3.8vw, 3.2rem);
   font-weight: 600;
   line-height: 1.35;
   max-width: min(92vw, 880px);
@@ -616,7 +635,7 @@ p, li {
 }
 .prompt-venue-beats li {
   font-family: var(--font-body);
-  font-size: clamp(1.2rem, 2.7vw, 2rem);
+  font-size: clamp(1.2rem, 2.7vw, 2.45rem);
   line-height: 1.45;
   padding-left: clamp(0.75rem, 1.4vw, 1.1rem);
   border-left: 4px solid var(--clay);
@@ -626,7 +645,7 @@ p, li {
   color: var(--foreground);
 }
 .prompt-venue-foot {
-  font-size: clamp(1.2rem, 2.8vw, 2rem);
+  font-size: clamp(1.2rem, 2.8vw, 2.45rem);
   color: var(--clay);
   font-weight: 600;
   text-align: center;
@@ -1544,14 +1563,14 @@ body.edit-active [contenteditable] {
   <div class="accent-bar"></div>
   <div class="slide-content centered">
     <h2 class="reveal">The Iterative Loop</h2>
-    <div style="position: relative; max-width: min(72vw, 800px); margin: clamp(1.5rem, 4vh, 3rem) auto 0;">
+    <div style="position: relative; max-width: min(82vw, 1200px); margin: clamp(1.5rem, 4vh, 3rem) auto 0;">
       <div class="loop-diagram reveal-scale" style="transition-delay: 0.2s; margin: 0; justify-content: center;">
-        <div class="loop-node active" style="flex: 0 0 clamp(160px, 22vw, 280px);">
+        <div class="loop-node active" style="flex: 0 0 clamp(200px, 26vw, 420px);">
           <div class="loop-node-title">Human Judges Output</div>
           <div class="loop-node-sub">"Like this, not that"</div>
         </div>
         <div class="loop-arrow">&rarr;</div>
-        <div class="loop-node" style="flex: 0 0 clamp(160px, 22vw, 280px);">
+        <div class="loop-node" style="flex: 0 0 clamp(200px, 26vw, 420px);">
           <div class="loop-node-title">AI Extracts &amp; Encodes Rules</div>
           <div class="loop-node-sub">Figures out why, updates the skill</div>
         </div>
@@ -1561,7 +1580,7 @@ body.edit-active [contenteditable] {
       </div>
     </div>
     <p class="reveal" style="font-size: var(--h3-size); color: var(--clay); font-weight: 600; margin-top: clamp(1.5rem, 4vh, 3rem);">Re-run. Judge again. Repeat.</p>
-    <p class="reveal text-muted" style="font-size: var(--body-size); margin-top: clamp(0.5rem, 1.5vh, 1rem); max-width: 800px;">You can't reason about the model. You can only judge its output.</p>
+    <p class="reveal text-muted" style="font-size: var(--body-size); margin-top: clamp(0.5rem, 1.5vh, 1rem); max-width: 1000px;">You can't reason about the model. You can only judge its output.</p>
   </div>
   <div class="slide-number"></div>
 </section>
@@ -2081,6 +2100,7 @@ class SlidePresentation {
 
     this.setupSlideNumbers();
     this.setupIntersectionObserver();
+    this.setupFontScale();
     this.setupKeyboardNav();
     this.setupTouchNav();
     this.setupWheelNav();
@@ -2120,7 +2140,7 @@ class SlidePresentation {
 
   setupKeyboardNav() {
     document.addEventListener('keydown', (e) => {
-      if (e.target.getAttribute('contenteditable')) return;
+      if (e.target && e.target.getAttribute && e.target.getAttribute('contenteditable')) return;
       switch(e.key) {
         case 'ArrowDown': case 'ArrowRight': case ' ': case 'PageDown':
           e.preventDefault(); this.goToSlide(this.currentSlide + 1); break;
@@ -2128,8 +2148,41 @@ class SlidePresentation {
           e.preventDefault(); this.goToSlide(this.currentSlide - 1); break;
         case 'Home': e.preventDefault(); this.goToSlide(0); break;
         case 'End': e.preventDefault(); this.goToSlide(this.slides.length - 1); break;
+        case '+': case '=': e.preventDefault(); this.adjustFontScale(0.1); break;
+        case '-': case '_': e.preventDefault(); this.adjustFontScale(-0.1); break;
+        case '0': e.preventDefault(); this.setFontScale(1); break;
       }
     });
+  }
+
+  /* ---- Presentation font scale ---------------------------------------- */
+  setupFontScale() {
+    const saved = parseFloat(localStorage.getItem('tt-font-scale'));
+    this.fontScale = (saved >= 0.6 && saved <= 2.0) ? saved : 1;
+    document.documentElement.style.setProperty('--fs', this.fontScale);
+  }
+
+  adjustFontScale(delta) {
+    this.setFontScale((this.fontScale || 1) + delta);
+  }
+
+  setFontScale(value) {
+    this.fontScale = Math.min(2.0, Math.max(0.6, Math.round(value * 10) / 10));
+    document.documentElement.style.setProperty('--fs', this.fontScale);
+    localStorage.setItem('tt-font-scale', this.fontScale);
+    this.showFontScaleToast();
+  }
+
+  showFontScaleToast() {
+    if (!this.fsToast) {
+      this.fsToast = document.createElement('div');
+      this.fsToast.className = 'fs-toast';
+      document.body.appendChild(this.fsToast);
+    }
+    this.fsToast.textContent = 'text ' + Math.round(this.fontScale * 100) + '%';
+    this.fsToast.classList.add('show');
+    clearTimeout(this.fsToastTimer);
+    this.fsToastTimer = setTimeout(() => this.fsToast.classList.remove('show'), 1200);
   }
 
   setupTouchNav() {

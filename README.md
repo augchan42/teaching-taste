@@ -15,5 +15,9 @@ A single self-contained HTML deck showing how style is taught to an AI image pip
 
 - Next/prev: arrow keys, space, PageUp/Down, scroll, or swipe
 - `E`: toggle inline edit mode (edits persist in localStorage; `Ctrl+S` exports an updated copy)
+- `+` / `-`: scale all text up or down in 10% steps; `0` resets to 100%. The choice persists in
+  localStorage, so set it once on the venue projector and it stays. 100% is tuned to fill a 1080p
+  frame without clipping — a few dense slides (the "What Is Taste?" and "Style Is Not a Suffix"
+  slides first) start to clip above 110%, since slides are fixed-height with `overflow: hidden`.
 
 Layout and copy editing happen live in the HTML; the slide progress bar and dot nav are auto-generated.
