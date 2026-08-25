@@ -531,6 +531,39 @@ p, li {
 .slide.visible .reveal-left { opacity: 1; transform: translateX(0); }
 
 /* ===========================================
+   PRINT — the backup PDF
+   One 16:9 page per slide, every reveal already revealed.
+   =========================================== */
+@page { size: 13.333in 7.5in; margin: 0; }
+
+@media print {
+  html, body { height: auto; overflow: visible; background: #fff; }
+  html { scroll-snap-type: none; }
+
+  .slide {
+    width: 13.333in; height: 7.5in;
+    break-after: page; page-break-after: always;
+    scroll-snap-align: none;
+    -webkit-print-color-adjust: exact; print-color-adjust: exact;
+  }
+  .slide:last-of-type { break-after: auto; page-break-after: auto; }
+
+  /* Nothing animates on paper */
+  .reveal, .reveal-stamp, .reveal-scale, .reveal-left {
+    opacity: 1 !important; transform: none !important; transition: none !important;
+  }
+  .reveal-stamp { transform: rotate(-3deg) !important; }
+
+  /* Screen furniture */
+  .progress-bar, .nav-dots, .keyboard-hint, .edit-toggle, .edit-banner { display: none !important; }
+
+  /* The texture is noise at 1.25% effective opacity. On screen it gives the
+     paper its tooth. On paper it is invisible, and it forces a full-page
+     raster per slide — 17MB of the PDF. The ink washes stay. */
+  .paper-texture { display: none !important; }
+}
+
+/* ===========================================
    LAYOUT HELPERS
    =========================================== */
 .centered { text-align: center; align-items: center; }
